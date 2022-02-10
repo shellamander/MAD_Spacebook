@@ -8,6 +8,15 @@ import { View, Text, TouchableOpacity, Button, TextInput, StyleSheet } from 'rea
 const Homescreen1 = ({navigation}) => { // you used an arrow function shaza
   const [email, setEmail] = useState(" ");
   const [password, setPassword]= useState("");
+ //const[userToken, setUserToken] = React.useState(null);
+ //const[isLoading, setIsLoading] = React.useState(true);
+
+ /*useEffect(()=> {
+   setTimeout(() => {
+     setIsLoading(false)
+   }, 1000);
+ }, []);
+ */
  
  
   const signup = () => {
@@ -39,8 +48,8 @@ const Homescreen1 = ({navigation}) => { // you used an arrow function shaza
                placeholder = "Email"
                placeholderTextColor = "#123456"
                autoCapitalize = "none"
-               //value={email}
-               //onChange={e=> setEmail(e.target.value) }
+               value={email}
+               onChange={e=> setEmail(e.target.value) }
                
                />
  
@@ -50,8 +59,8 @@ const Homescreen1 = ({navigation}) => { // you used an arrow function shaza
                placeholder = "Password"
                placeholderTextColor = "#123456"
                autoCapitalize = "none"
-               //value={email}
-               //onChange={e=> setPassword(e.target.value) }
+               value={password}
+               onChange={e=> setPassword(e.target.value) }
                
                />
  

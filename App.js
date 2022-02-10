@@ -1,3 +1,4 @@
+//import 'react-native-gesture-handler';
 //import * as React from 'react';
 //import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,9 +9,7 @@ import Apphomescreen from './screens/apphomescreen';
 import AccountScreen from './screens/Account';
 import FriendScreen from './screens/Friends';
 import PostScreen from './screens/Post'
-import PublishedScreen from './screens/Published'
-import Drafts from './screens/Drafts'
-import ScheduledScreen from './screens/Scheduled'
+
 
 
 //SET ITEM AND GET ITEM INA SYNSTORAGE TOKEN BOYS// stringify/ flat list// stringify then json parse

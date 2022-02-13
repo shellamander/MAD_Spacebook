@@ -16,7 +16,7 @@ const Login = ({navigation}) => {
         // navigation.navigate("Home");
         fetch("http://localhost:3333/api/1.0.0/user", {
             method: 'post',
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -34,12 +34,18 @@ const Login = ({navigation}) => {
             }else{
                 throw "Something happened";
             }
+        }) .then(async(jeff) => {
+            let id = jeff.id;
+            
+            await AsyncStorage.setItem('@user_id', id);
+            console.log(id)
         })
-       
         .catch((err) => {
             console.log(err);
         })
     }
+       
+       
 
     return (
         <View>

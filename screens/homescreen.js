@@ -11,7 +11,7 @@ const Login = ({navigation}) => {
         // navigation.navigate("Home");
         fetch("http://localhost:3333/api/1.0.0/login", {
             method: 'post',
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -34,6 +34,7 @@ const Login = ({navigation}) => {
 
             await AsyncStorage.setItem('@spacebook_token', token);
             navigation.navigate("homescreen");
+            console.log("im working");
         })
         .catch((err) => {
             console.log(err);

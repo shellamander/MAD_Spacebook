@@ -1,7 +1,7 @@
-//import 'react-native-gesture-handler';
-//import * as React from 'react';
-//import { NavigationContainer } from '@react-navigation/native';
+import 'react-native-gesture-handler';
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 
 import HomeScreen from './screens/homescreen';
 import RegisterScreen from './screens/register';
@@ -9,7 +9,6 @@ import Apphomescreen from './screens/apphomescreen';
 import AccountScreen from './screens/Account';
 import FriendScreen from './screens/Friends';
 import PostScreen from './screens/Post'
-
 
 
 //SET ITEM AND GET ITEM INA SYNSTORAGE TOKEN BOYS// stringify/ flat list// stringify then json parse
@@ -51,7 +50,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 
-
+////SHAZA LOOK OVER HERE I KNOW ITS A
+//LLOT OF COMMENTS 
+// AsyncStorage.getItem(LOGIN_TOKEN); I NEED THIS 
 
 
 /*function PostScreen() {
@@ -84,7 +85,7 @@ function Ryan () {
 
 
 
-function Goliath () {
+/*function Goliath () {
   return (
     
     <Tab1.Navigator>
@@ -97,7 +98,7 @@ function Goliath () {
     
   );
 }
-
+*/
 //in appp i call the stack navigator within tab screen 
 const App=() =>{
   return (

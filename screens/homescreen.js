@@ -3,8 +3,8 @@ import { Text, TextInput, View, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("shazhands@gmail.com");
+    const [password, setPassword] = useState("shazhands");
 
     const login = async () => {
         // await AsyncStorage.setItem('@spacebook_token', "kbsdvkjbwvbj");
@@ -22,7 +22,7 @@ const Login = ({navigation}) => {
         .then((steve) => {
             if(steve.status === 200){
                 return steve.json();
-            }else if(response.status === 400){
+            }else if(steve.status === 400){
               throw 'Invalid email or password';
             }else{
                 throw "Something happened";

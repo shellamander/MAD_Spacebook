@@ -8,7 +8,8 @@ import RegisterScreen from './screens/register';
 import Apphomescreen from './screens/apphomescreen';
 import AccountScreen from './screens/Account';
 import FriendScreen from './screens/Friends';
-import PostScreen from './screens/Post'
+import PostScreen from './screens/Post';
+import UserProfile from './screens/userprofile';
 
 
 //SET ITEM AND GET ITEM INA SYNSTORAGE TOKEN BOYS// stringify/ flat list// stringify then json parse
@@ -108,6 +109,7 @@ const App=() =>{
         <Tab.Screen name="Friends" component={FriendScreen} />
         <Tab.Screen name="Posts" component={PostScreen} />
         <Tab.Screen name="Account" component={AccountScreen} />
+        <Tab.Screen name="Profile" component={UserProfile} />
         <Tab.Screen name="ryan" component={Ryan} options={{ headerShown: false }}
                     navigationOptions={{ gesturesEnabled: false }} />  
       </Tab.Navigator>

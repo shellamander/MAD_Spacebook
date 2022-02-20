@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler';
+import React, { useState, useEffect } from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import HomeScreen from './screens/homescreen';
@@ -12,58 +14,13 @@ import PostScreen from './screens/Post';
 import UserProfile from './screens/userprofile';
 
 
-//SET ITEM AND GET ITEM INA SYNSTORAGE TOKEN BOYS// stringify/ flat list// stringify then json parse
-// conditional loading and rendering set to true but set to false for compnet did mount
-//scrollview pagination for search through friends
-//stylesheets// customise view  ask brandon maybe?// use an ui library / bootstrap ? -- higher marks
-//import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-// DRAW NAV  IS TOP LEVEL,,, MAD SEXY ,,, USE?
-
-/*const nah =()=> {
-  return(
-    <Apphomescreen /> 
-  )
-  }
-  */
 
 
-/*const MyTabs =()=>{
-return(
-  <Tab.Navigator>
-    <Tab.Screen name="idk" component={IDK}/>
-    <Tab.Screen name="maybe" component={Maybe}/>
-
-  </Tab.Navigator>
-)
-
-
-}
-*/
-
-
-
-
-//export default MyTabs;
-
-import * as React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 
-////SHAZA LOOK OVER HERE I KNOW ITS A
-//LLOT OF COMMENTS 
-// AsyncStorage.getItem(LOGIN_TOKEN); I NEED THIS 
-
-
-/*function PostScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Posts!</Text>
-    </View>
-  );
-}
-*/
 const Tab = createMaterialTopTabNavigator();
 const Tab1 = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -71,53 +28,78 @@ const Stack = createNativeStackNavigator();
 function Ryan () {
   return (
     
-      <Stack.Navigator screenOptions={{  // i changed something here shaza
+      <Stack.Navigator screenOptions={{  // i changed something here 
         headerShown: false
       }}>
-        <Stack.Screen name="homescreen" component={HomeScreen} />
-        <Stack.Screen name="ryan1" component={Ryan} 
-                    navigationOptions={{ gesturesEnabled: false }} />
+        <Stack.Screen name="homescreen" component={HomeScreen}  />
+        
         <Stack.Screen name="register" component={RegisterScreen} />
       </Stack.Navigator>
       
     
   );
-}
+    }
 
 
 
-/*function Goliath () {
-  return (
+
+
+
+ 
+
+function App()
+{
+  const [state, setState ]= useState("");
+
+
+  const test = async () => {
     
-    <Tab1.Navigator>
-        
-    <Tab1.Screen name="Drafts" component={Drafts} />
-    <Tab1.Screen name="Published" component={PublishedScreen} />
-    <Tab1.Screen name="Scheduled" component={ScheduledScreen} />
-     
-  </Tab1.Navigator>
+    const tokenval= await AsyncStorage.getItem('@spacebook_token');
+    if (tokenval=== undefined || tokenval=== null){ 
+      console.log("error PLS") 
+     setState(null);
+
+    }
+
+    if (tokenval!== undefined && tokenval!== null){ 
+      console.log("Hi i should be wokring") 
+     setState(tokenval);
+
+    }
+
+  
     
-  );
-}
-*/
-//in appp i call the stack navigator within tab screen 
-const App=() =>{
+  }
+
+  useEffect(() => {
+    
+   test();
+    
+  }, []); 
+
+
+  
   return (
     <NavigationContainer>
+
       <Tab.Navigator>
+        {state==null?(     // if no token exists dont show the navigator ???
+          <Tab.Screen name="ryan" component={Ryan} options={{ headerShown: false }}
+          navigationOptions={{ gesturesEnabled: false }} /> 
+
+        ) : (
+          <><Tab.Screen name="Friends" component={FriendScreen} /><Tab.Screen name="Posts" component={PostScreen} /><Tab.Screen name="Account" component={AccountScreen} /><Tab.Screen name="Profile" component={UserProfile} /></>
+        ) }
+       
         
-        <Tab.Screen name="Friends" component={FriendScreen} />
-        <Tab.Screen name="Posts" component={PostScreen} />
-        <Tab.Screen name="Account" component={AccountScreen} />
-        <Tab.Screen name="Profile" component={UserProfile} />
-        <Tab.Screen name="ryan" component={Ryan} options={{ headerShown: false }}
-                    navigationOptions={{ gesturesEnabled: false }} />  
       </Tab.Navigator>
       </NavigationContainer>
       
     
   );
 }
+
+
 
 // aDDED THIS COMMENT
 

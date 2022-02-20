@@ -6,31 +6,45 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Imagey from './images';
 
 function IDK() {
-  const [token1, setToken] = useState('d57191920ee5a8064700b32f66ce3074');
+  const [token1, setToken] = useState('');
+  const [id1, setID ]= useState("");
   const [photo, setPhoto] = useState(null);
   const [isLoading, setLoading] = useState(true);
   console.log(token1)
 
   const test = async () => {
     const store = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
-    await setToken(store);
+    
+    setToken(store);
+    console.log("imdifferent");
+    console.log(store);
   }
 
-  // useEffect (async() => {
-  //   await postbaby();
-  //   setData(jeff)
-  //   });
+  const test1 = async () => {
+   //call before i need it otherwise its undefined 
+    const storeid= await AsyncStorage.getItem("@spacebook_id");
+  
+     setID(storeid);
+    console.log("imdifferent");
+    console.log(storeid);
+  }
 
   useEffect(async () => {
     await test();
     console.log(token1, "Now do post baby")
-    postbaby();
+    
   }, []); 
+  
+  useEffect(async () => {
+    await test1();
+    console.log(id1, "Now do post baby id")
+    postbaby();
+  }, []);
 
   const postbaby = () => {
     
     console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/18/photo", {
+    fetch("http://localhost:3333/api/1.0.0/user/"+id1+"/photo", {
       method: 'get',
       headers: {
         'Content-Type': 'image/png',
@@ -66,3 +80,4 @@ function IDK() {
 }
 
   export default IDK;
+  //make one screen 

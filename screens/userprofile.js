@@ -10,40 +10,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function IDK() {
 
-  const [token1, setToken] = useState('d57191920ee5a8064700b32f66ce3074');
+  //const [token1, setToken] = useState('d57191920ee5a8064700b32f66ce3074');
+  const [token1, setToken] = useState("");
+  const [id1, setID ]= useState("");
   const [data, setData] = useState([]);
   const [first_name, setFname] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-//   const [last_name, setSname] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
- 
- 
-  //var test123="";
+
+
+  const  delete1  = async()=>{
+    await AsyncStorage.clear();
+    console.log("USSSSSS");
+}
+
   
-
-
-//   const [first_name, setFname] = useState("");
-//   const [last_name, setSname] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-
-//   const tryme= ()=>{
-//       postbaby();
-//   }
-
-
-//   useEffect(() => {
-//     console.log("I have been mounted")
-//     postbaby();
-//   }, [])
-
-  console.log(token1)
 
   const test = async () => {
     const store = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
-    await setToken(store);
+    
+    setToken(store);
+    console.log("imdifferent");
+    console.log(store);
   }
+
+  const test1 = async () => {
+   //call before i need it otherwise its undefined 
+    const storeid= await AsyncStorage.getItem("@spacebook_id");
+  
+     await setID(storeid);
+    console.log("imdifferent");
+    console.log(storeid);
+  }
+ 
+  console.log(token1)
+  console.log("please notice me");
+  console.log(id1);
 
   // useEffect (async() => {
   //   await postbaby();
@@ -53,8 +54,18 @@ function IDK() {
   useEffect(async () => {
     await test();
     console.log(token1, "Now do post baby")
-    postbaby();
-  }, []);  // testing
+    
+  }, []); 
+  
+  useEffect(async () => {
+    await test1();
+    console.log(id1, "Now do post baby id")
+    postbaby();  // if statement async storage 
+  }, []);// testing
+
+  console.log("ibegyounoticeme");
+  console.log(id1);
+  console.log(token1);
 
   //reference later for r 
   //"user_id": AsyncStorage.getItem(18);
@@ -62,7 +73,7 @@ function IDK() {
   const postbaby = () => {
     
     console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/18", {
+    fetch("http://localhost:3333/api/1.0.0/user/" + id1+ {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
@@ -107,7 +118,7 @@ function IDK() {
   const update = () => {
     
     console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/18", {
+    fetch("http://localhost:3333/api/1.0.0/user/"+id1, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -120,6 +131,7 @@ function IDK() {
         // "password": password
     })
 })
+/// CALL GET AGAIN AFTER PATCH SO IT CAN DISPLAY IT 
 
 // PATCH DOESNT RRETURN ANYTHING, YOU NEED TO ACC UPDATED IT BY CALLING GET AGAIN SO YOU CAN PHYSICALLY SEE THE CHNAGE
 //GET RID OF THIS SHAZA (BELOWW)
@@ -157,8 +169,14 @@ function IDK() {
 
  //
 //<Text>{test123}</Text>// IM OVER HEREEEEEEEEEE
+
+
 if(isLoading){
-    return (<View><Text>Loading baby...</Text></View>)
+   
+    return (<View><Text>Loading baby...</Text>
+    <Button title ="Logout"  
+                onPress={() => delete1()}> </Button>
+    </View>)
 }else{
     return (  /// flatlist 
         //

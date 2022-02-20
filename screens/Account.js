@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, Button, View, } from 'react-native';
 //import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -11,31 +12,47 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function IDK() {
 
   const [token1, setToken] = useState('');
+  const [id1, setID ]= useState("");
   const [data, setData] = useState([]);
 
-  console.log(token1)
-
-  const test = async () => {
+  console.log(token1);
+  console.log(id1);
+    const test = async () => {
     const store = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
+    
     setToken(store);
+    console.log("imdifferent");
+    console.log(store);
   }
 
-  // useEffect (async() => {
-  //   await postbaby();
-  //   setData(jeff)
-  //   });
+  const test1 = async () => {
+   //call before i need it otherwise its undefined 
+    const storeid= await AsyncStorage.getItem("@spacebook_id");
+  
+     setID(storeid);
+    console.log("imdifferent");
+    console.log(storeid);
+  }
 
   useEffect(async () => {
     await test();
-    //here
-  }, []);  // testing
+    console.log(token1, "Now do post baby")
+    
+  }, []); 
+  
+  useEffect(async () => {
+    await test1();
+    console.log(id1, "Now do post baby id")
+    postbaby();
+  }, []);
+   // testing
 
   //reference later for r 
   //"user_id": AsyncStorage.getItem(18);
   //var r = 18;
   const postbaby = () => {
     console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/18/post", {
+    fetch("http://localhost:3333/api/1.0.0/user/"+id1+"/post", {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
@@ -68,11 +85,14 @@ function IDK() {
         console.log(err);
       })
   }
-
+  const rawr = data.map((post)=>{   
+     (post.post_id);   
+});   
 
   return (  /// flatlist 
 
-    //
+     console.log("ijust wanna check "),
+     
     <View>
       <Text>Drafts</Text>
 
@@ -82,7 +102,12 @@ function IDK() {
 
       />
 
-      {data.map(post => <Text>{post.text}</Text>)}
+      
+    
+        {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) } 
+        
+        
+    
       
 
     </View>
@@ -91,6 +116,7 @@ function IDK() {
 }
 
 //d57191920ee5a8064700b32f66ce3074
+//HOW TO ITERATE SINGULALRY E.G THE KEY ERROR I KEEP GETTING
 
 ;
 

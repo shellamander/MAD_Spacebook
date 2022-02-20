@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Text, TextInput, View, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const Login = ({navigation}) => {
-    const [email, setEmail] = useState("shazhands@gmail.com");
-    const [password, setPassword] = useState("shazhands");
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
 
     const login = async () => {
         // await AsyncStorage.setItem('@spacebook_token', "kbsdvkjbwvbj");
@@ -33,8 +34,13 @@ const Login = ({navigation}) => {
             let token = jeff.token;
 
             await AsyncStorage.setItem('@spacebook_token', token);
-            navigation.navigate("homescreen");
+            await AsyncStorage.setItem('@spacebook_id', id);
+            navigation.navigate("register");
             console.log("im working");
+            console.log(jeff.id);
+            console.log(id);
+            console.log(token);
+            
         })
         .catch((err) => {
             console.log(err);

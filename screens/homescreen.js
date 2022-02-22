@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Login = ({navigation}) => {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState("shazhands@gmail.com");
+    const [password, setPassword] = useState("shazhands");
 
     const login = async () => {
         // await AsyncStorage.setItem('@spacebook_token', "kbsdvkjbwvbj");
@@ -35,7 +35,8 @@ const Login = ({navigation}) => {
 
             await AsyncStorage.setItem('@spacebook_token', token);
             await AsyncStorage.setItem('@spacebook_id', id);
-            navigation.navigate("register");
+           // navigation.navigate('Friends');
+            navigation.navigate('main');
             console.log("im working");
             console.log(jeff.id);
             console.log(id);

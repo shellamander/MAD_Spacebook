@@ -70,6 +70,11 @@ const Login = ({navigation}) => {
                 title="register"
                 onPress={() => login()}
             />
+
+            <Button
+                title="Go home"
+                onPress={() => navigation.goBack()}
+            />
            
         </View>
     )

@@ -5,123 +5,79 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
+const UserPosts = () => {
+  let [data, setData] = useState({});
+  let [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+      getPost();
+  }, [])
 
 
+  const getPost= async ()=> {
 
+    let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
+    let id= await AsyncStorage.getItem("@spacebook_id")
 
-function IDK() {
-
-  const [token1, setToken] = useState('');
-  const [id1, setID ]= useState("");
-  const [data, setData] = useState([]);
-
-  console.log(token1);
-  console.log(id1);
-    const test = async () => {
-    const store = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
-    
-    setToken(store);
-    console.log("imdifferent");
-    console.log(store);
-  }
-
-  const test1 = async () => {
-   //call before i need it otherwise its undefined 
-    const storeid= await AsyncStorage.getItem("@spacebook_id");
-  
-     setID(storeid);
-    console.log("imdifferent");
-    console.log(storeid);
-  }
-
-  useEffect(async () => {
-    await test();
-    console.log(token1, "Now do post baby")
-    
-  }, []); 
-  
-  useEffect(async () => {
-    await test1();
-    console.log(id1, "Now do post baby id")
-    postbaby();
-  }, []);
-   // testing
-
-  //reference later for r 
-  //"user_id": AsyncStorage.getItem(18);
-  //var r = 18;
-  const postbaby = () => {
-    console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/"+id1+"/post", {
+    console.log("ASh", token);
+    fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post", {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
-        'X-Authorization': token1, //x-authorization
+        'X-Authorization': token, //x-authorization
         //  "session_token":token1,
       },
 
     })
-      .then((steve) => {
-        if (steve.status === 200) {
+      .then((response) => {
+        if (response.status === 200) {
           console.log("IM HOME HONEY")
-          return steve.json();
-        } else if (steve.status === 400) {
+          return response.json();
+        } else if (response.status === 400) {
           throw 'Invalid email or password';
         } else {
           throw "Something happened";
         }
-      }).then(async (jeff) => {
+      }).then(async (post) => {
         console.log("IM WORKINGGG")
-        let post_id = jeff;
-        setData(jeff);
+        let post_id = post;
+        setData(post);
 
-        await AsyncStorage.setItem('@post_id', post_id);
-        console.log("IHDUFIGSIUGB")
-        console.log(jeff.text)
-        console.log(post_id)
+            await setIsLoading(false);
+            console.log(isLoading, data)
 
       })
       .catch((err) => {
         console.log(err);
       })
   }
-  const rawr = data.map((post)=>{   
-     (post.post_id);   
-});   
+  
 
-  return (  /// flatlist 
-
-     console.log("ijust wanna check "),
-     
-    <View>
-      <Text>Drafts</Text>
-
-      <Button
-        title="POST"
-        onPress={() => postbaby()}
-
-      />
-
-      
-    
-        {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) } 
-        
-        
-    
-      
-
-    </View>
-
-  )
+  if(isLoading){
+    return (<View><Text>Loading</Text></View>)
+  }else{
+  // const rawr = data.map((post)=>{   
+  //   (post.post_id);  
+    return (
+        <View>
+            <Text>{data.author}</Text>
+            <Text>Drafts</Text>
+            {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) }
+            <Button
+              title="POST"
+              onPress={() => getPost()}  // do it again shaza
+            />
+        </View>
+    );
+  }
 }
 
-//d57191920ee5a8064700b32f66ce3074
-//HOW TO ITERATE SINGULALRY E.G THE KEY ERROR I KEEP GETTING
-
-;
 
 
+//   {/* {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) }  */}
+          
+//     )
+//   }
+// }
 
-
-
-export default IDK;
+export default UserPosts;

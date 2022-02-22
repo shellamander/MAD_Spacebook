@@ -32,7 +32,7 @@ const Tab = createMaterialTopTabNavigator();
 
 
 
-function IDK({navigation}) {
+function PostScreen({navigation}) {
   return (
     <Tab.Navigator>
         
@@ -60,4 +60,4 @@ function IDK({navigation}) {
   // states   
   
 
-  export default IDK;
+  export default PostScreen;

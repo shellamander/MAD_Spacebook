@@ -29,6 +29,7 @@ function IDK() {
   console.log(texty)
   useEffect(async () => {
     await test();
+    console.log("Should be set", token1);
     //here
   },[] );  // testing
 
@@ -37,7 +38,7 @@ function IDK() {
 //var r = 18;
   const postbaby = () => {
     console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/18/post", {
+    fetch("http://localhost:3333/api/1.0.0/user/18/post", { // change id 
       method: 'post',
       headers: {
           'Content-Type': 'application/json',

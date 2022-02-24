@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
 
 // GET END POINT PICTURES FUUUUUUU
-const UserProfile = () => {
+const UserProfile = ({navigation}) => {
     let [data, setData] = useState({});
     let [photo, setPhoto] = useState({});
     let [isLoading, setIsLoading] = useState(true);
@@ -14,7 +16,7 @@ const UserProfile = () => {
         getUser();
     }, [])
 
-
+    
     const getUser = async () => {
         let id = await AsyncStorage.getItem("@spacebook_id");
         let token = await AsyncStorage.getItem("@spacebook_token");
@@ -50,6 +52,38 @@ const UserProfile = () => {
         })
     }
 
+    const logout = async () => {
+        //let id = await AsyncStorage.getItem("@spacebook_id");
+        let token = await AsyncStorage.getItem("@spacebook_token");
+        //let pfp= await AsyncStorage.getItem("@spacebook_pfp")
+        //console.log(pfp);
+        console.log("do i even reach here");
+
+      
+        fetch("http://localhost:3333/api/1.0.0/logout/" , {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': token
+        }
+        })
+        .then(async (response) => {
+            if (response.status === 200) {
+                console.log("we out")
+                await AsyncStorage.removeItem("@spacebook_token")
+                navigation.navigate('homescreen');
+            } else if (response.status === 400) {
+                throw 'Invalid email or password';
+            } else {
+                throw "Something happened";
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+// move the throw error to be viible 
+//check for a;ll hte error codes
     if(isLoading){
         return (<View><Text>Loading</Text></View>)
     }else{
@@ -59,14 +93,10 @@ const UserProfile = () => {
 
 {/* <Text>{pfp}</Text>  <Image source={require()} // lets stosre image in async storage to get it  */}
 
-
-
-
-
-
-
+                 
 
                 <Text>{data.first_name}</Text>
+                <TouchableOpacity onPress={() => logout()}> <Text> Logout</Text></TouchableOpacity>
                 
                 
             </View>

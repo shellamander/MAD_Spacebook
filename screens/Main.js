@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createMaterialTopTabNavigator();
 
-import Maybe1 from './Friends';
+import FriendScreen from './Friends';
 import PostScreen from './Post';
 import IDK from './Account';
 import UserProfile from './userprofile';
@@ -32,7 +32,7 @@ export default function Main()
 
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
-            <Tab.Screen name="Friends" component={Maybe1} />
+            <Tab.Screen name="Friends" component={FriendScreen} />
             <Tab.Screen name="Posts" component={PostScreen} />
             <Tab.Screen name="Account" component={IDK} />
             <Tab.Screen name="Profile" component={UserProfile} />

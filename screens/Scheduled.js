@@ -9,12 +9,15 @@ import {
   Text,
   StyleSheet,
   View,
-  FlatList
+  FlatList,
+  TouchableOpacity
+  
 } from 'react-native';
-import {SearchBar} from 'react-native-elements';
+import {Button, SearchBar} from 'react-native-elements';
 
-const App = () => {
+const Friends = () => {
   const [search, setSearch] = useState('');
+  const [friend, setFriend] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
 
@@ -45,15 +48,42 @@ const App = () => {
       .catch((error) => {
         console.error(error);
       });
-    }
+  }
  
+    const addFriend= async(id)=>{
+      let token = await AsyncStorage.getItem("@spacebook_token");
+
+        fetch("http://localhost:3333/api/1.0.0/user/"+id+"/friends" ,{
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': token
+            }
+            })
+          
+          .then((response) => {
+            if (response.status === 201) {
+               console.log("im working");
+            } else if (response.status === 401) {
+                throw 'Unauthorised';
+            }else if (response.status === 403) {
+              throw 'we are friends already';
+          } else {
+                throw "Something happened";
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+      }
+          
+
+
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
     if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource
-      // Update FilteredDataSource
+      
       const newData = masterDataSource.filter(function (item) {
         const itemData = item.user_givenname
           ? item.user_givenname.toUpperCase()
@@ -63,6 +93,7 @@ const App = () => {
       });
       setFilteredDataSource(newData);
       setSearch(text);
+      console.log("HI IM SERACHING FOR MY FRIEND :", newData)
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
@@ -72,16 +103,20 @@ const App = () => {
   };
 
   const ItemView = ({item}) => {
+    //setFriend(item.user_id);
+    //console.log("i'm this person" ,search)
     return (
-      // Flat List Item
-      //i can see al my user bois
-      <Text
-        style={styles.itemStyle}
-        onPress={() => getItem(item)}>
+      <View style={styles.container}>
+       
+      <Text style={styles.itemStyle}>
           {item.user_givenname}
-          
-          
       </Text>
+      <TouchableOpacity
+       style={{ height: 20, width:100, backgroundColor:'#FF5733' }} onPress={() => addFriend(item.user_id)}
+      >
+        <Text>Add Friend</Text>
+      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -115,11 +150,15 @@ const App = () => {
           value={search}
         />
         <FlatList
+        
           data={filteredDataSource}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={ItemSeparatorView}
           renderItem={ItemView}
+         
+          
         />
+       
       </View>
     </SafeAreaView>
   );
@@ -134,4 +173,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Friends;

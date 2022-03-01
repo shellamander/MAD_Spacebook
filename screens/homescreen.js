@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, Button } from 'react-native';
+import { Text, TextInput, View, Button,StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const Login = ({navigation}) => {
@@ -49,27 +50,104 @@ const Login = ({navigation}) => {
     }
 
     return (
-        <View>
-            <Text>Login</Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Spacebook</Text>
+            <Text style={styles.title1}>Login</Text>
             <TextInput
+            style={styles.fname}
                 onChangeText={(email) => setEmail(email)}
                 value={email}
             />
             <TextInput
+            style={styles.fname}
                 onChangeText={(pass) => setPassword(pass)}
                 value={password}
+                secureTextEntry
             />
-            <Button
-                title="Login"
-                onPress={() => login()}
-            />
-            <Button 
-                title="Register"
-                onPress={() => navigation.navigate("register")}
-            />
+            <TouchableOpacity style={styles.fname} title="Login"
+                onPress={() => login()}> <Text>Login</Text></TouchableOpacity>
+               
+           
+            <TouchableOpacity style={styles.fname} title="Register"
+                onPress={() => navigation.navigate("register")}> <Text> Make An Account</Text></TouchableOpacity>
+               
+            
         </View>
     )
 
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#F0FFFF"
+    },
+    text: {
+        fontFamily: "GillSans-SemiBold",
+        color: "#000"
+    },
+    profileImage: {
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        overflow: "hidden"
+    },
+    button: {
+        alignItems: 'center',
+        backgroundColor: '#F0FFFF',
+        padding: 10,
+        width:100,
+      },
+      button1: {
+        alignItems: 'center',
+        backgroundColor: '#FFF0F5',
+        padding: 10,
+        width:100,
+      },
+      title: {
+        marginTop: 100,
+        //paddingVertical: 8,
+       //borderWidth: 4,
+        //borderColor: "#20232a",
+       // borderRadius: 6,
+        //backgroundColor: "#61dafb",
+        color: "#61dafb",
+        textAlign: "center",
+        fontSize: 50,
+        fontStyle:'italic',
+        fontWeight: 'bold'
+      },
+      title1: {
+        marginTop: 10,
+        //paddingVertical: 8,
+       //borderWidth: 4,
+        //borderColor: "#20232a",
+       // borderRadius: 6,
+        //backgroundColor: "#61dafb",
+        color: "#61dafb",
+        textAlign: "center",
+        fontSize: 30,
+        fontStyle:'italic',
+        fontWeight: 'bold'
+      },
+      fname: {
+       
+        marginTop: 45,
+     
+        padding: 1,
+        width:300,
+          // SHAZA LOOK
+       // borderWidth: 4,
+        //borderColor: "#20232a",
+        borderRadius: 500,
+        backgroundColor: "#61dafb",
+        color: "#123456",
+        textAlign: "center",
+        fontSize: 20,
+        fontStyle:'italic',
+        fontWeight: 'bold',
+        textTransform: "uppercase"
+      },
+}
+)
 
 export default Login;

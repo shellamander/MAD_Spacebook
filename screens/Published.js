@@ -35,8 +35,6 @@ function imageProfile() {
         let data1 = URL.createObjectURL(image);
         setData(data1);
         setIsLoading(false);
-        
-        await AsyncStorage.setItem('@spacebook_pfp', data1);
       })
       .catch((err) => {
         console.log(err);

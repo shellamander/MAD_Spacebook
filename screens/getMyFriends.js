@@ -15,9 +15,11 @@ import {
 } from 'react-native';
 import {Button, SearchBar} from 'react-native-elements';
 
-const Friends = () => {
+const Friends = (navigation) => {
 
   const [friend, setFriend] = useState([]);
+  const [friendID, setFriendID] = useState([]);
+  console.log("RARARARA",friendID)
 
 
   
@@ -53,22 +55,35 @@ const Friends = () => {
       })
       .then(async (FRIENDLY) => {
         setFriend(FRIENDLY)
+        setFriendID(FRIENDLY)
         //should do an array list and loop through thelist setting the neame
         console.log(FRIENDLY)
-        console.log("im tryna be friend w you " ,friend)
+        console.log("im tryna be friend w you " ,friendID)
        })
       .catch((err) => {
           console.log(err);
       })
     }
  
-   
+    const goToFriend= async(id)=>{
+      let friendPage = id;
+      await AsyncStorage.setItem('@spacebook_friend', friendPage);
+      navigation.navigate('friendAccount');
+        }
+
+
+
 
 //PLEASE CONDITIONALLY RENDER SO AFTER YOU ACCEPTED THE FRIEDN REQUEST IT DISAPPEARS SHAZA
-  const getItem = (item) => {
-    // Function for click on an item
-    console.log(friend)
-    alert('Id : ' + item.user_givenname + ' Title : ' + item.user_familyname);
+  const getItem = () => {
+    {friendID.map(friend2 => (
+  
+      <View>
+        
+        <Text style={styles.myButton}  >{friend2.user_id} </Text> 
+         
+         </View>
+      ) ) }
   };
 
   return (
@@ -76,18 +91,28 @@ const Friends = () => {
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
      
-        
         {friend.map(friend1 => (
+  
           <View>
             
-            <TouchableOpacity onPress={() => console.log(friend1)} style={styles.myButton}>{friend1.user_givenname}</TouchableOpacity> 
+            <TouchableOpacity  onPress={() => goToFriend(friend1.user_id)} style={styles.myButton}  >{friend1.user_givenname} </TouchableOpacity> 
+             
              </View>
           ) ) }
-      
-        
+
+          
+{friendID.map(friend2 => (
+  
+  <View>
+    
+    <Text style={styles.myButton}  >{friend2.user_id} </Text> 
+     
+     </View>
+))}
        
       </View>
     </SafeAreaView>
+    
   );
 };
 // THE RETURN STATEMENT FLATLIST DOESNT DO ANYTHING OTHER THAN REDNER ITEM VIEW 

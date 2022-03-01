@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Button, View, } from 'react-native';
+import { Text, TextInput,Button, View, StyleSheet} from 'react-native';
 //import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {FontAwesome} from '@expo/vector-Icons';
+import Drafts from './Drafts';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const UserPosts = () => {
   let [data, setData] = useState({});
   let [isLoading, setIsLoading] = useState(true);
+  const [texty, setText] = useState('');
 
   useEffect(() => {
       getPost();
@@ -40,34 +44,187 @@ const UserPosts = () => {
         }
       }).then(async (post) => {
         console.log("IM WORKINGGG")
+        
         let post_id = post;
         setData(post);
 
             await setIsLoading(false);
-            console.log(isLoading, data)
+           
 
       })
       .catch((err) => {
         console.log(err);
+        //post this as a string rather than throwing it 
       })
   }
   
+
+  const likePost= async(id,post)=>{
+    let token = await AsyncStorage.getItem("@spacebook_token");
+
+      fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post/"+post+"/like",{
+          method: 'post',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': token
+          }
+          })
+        
+        .then((response) => {
+          if (response.status === 200) {
+             console.log("im working and ive rejected you");
+          } else if (response.status === 401) {
+              throw 'Unauthorised';
+          }else if (response.status === 403) {
+            throw 'you liked this already';
+        } else {
+              throw "Something happened";
+          }
+      })
+      .catch((err) => {
+          console.log(err);
+      })
+    }
+
+    const dislikePost= async(id,post)=>{
+      let token = await AsyncStorage.getItem("@spacebook_token");
+  
+        fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post/"+post+"/like",{
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': token
+            }
+            })
+          
+          .then((response) => {
+            if (response.status === 200) {
+               console.log("im working and ");
+            } else if (response.status === 401) {
+                throw 'Unauthorised';
+            }else if (response.status === 403) {
+              throw 'you havent even liked it';
+          } else {
+                throw "Something happened";
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+      }
+
+      const deletePost= async(id,post)=>{
+        let token = await AsyncStorage.getItem("@spacebook_token");
+    
+          fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post/"+post,{
+              method: 'delete',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-Authorization': token
+              }
+              })
+            
+            .then((response) => {
+              if (response.status === 200) {
+                 console.log("ive deleted this post  ");
+              } else if (response.status === 401) {
+                  throw 'Unauthorised';
+              }else if (response.status === 403) {
+                throw 'you havent even liked it';
+            } else {
+                  throw "Something happened";
+              }
+          })
+          .catch((err) => {
+              console.log(err);
+          })
+        }
+        const postbaby = async() => {
+          
+          let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
+          let id= await AsyncStorage.getItem("@spacebook_id")
+          fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post", { // change id 
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': token, //x-authorization
+                //  "session_token":token1,
+            },
+            body: JSON.stringify({
+
+              "text": texty,
+             
+            })
+        })
+        .then((steve) => {
+            if(steve.status === 201){
+              console.log("IM HOME HONEY")
+                return steve.json();
+            }else if(steve.status === 400){
+              throw 'Invalid email or password';
+            }else{
+                throw "Something happened";
+            }
+        }) .then(async(jeff) => {
+          //console.log("IM WORKINGGG")
+            let post_id = jeff.id;
+            
+            
+            await AsyncStorage.setItem('@post_id', post_id);
+            console.log(post_id)
+            getPost();
+            
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+      }
 
   if(isLoading){
     return (<View><Text>Loading</Text></View>)
   }else{
   // const rawr = data.map((post)=>{   
   //   (post.post_id);  
+                //SHAZA
+                // I CANT LIKE MY OWN [POST]
+                // I CANT LIKE SOMEONES COMMENT ON MY OWN WALL
+                // CONDITONAL RENDERING OVER HERE 
+                //include mine and peoples posts
+                //we need a view with space allocated via flex:8 
     return (
-        <View>
-            <Text>{data.author}</Text>
-            <Text>Drafts</Text>
-            {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) }
-            <Button
-              title="POST"
-              onPress={() => getPost()}  // do it again shaza
-            />
+      //my scroll wont work booo :(
+      
+        <View style={styles.container} >
+         
+            <Text style={styles.title}>My Feed</Text>
+            <View style={{flexDirection:'row', flex: 1}}> 
+              <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)}value={texty}/>
+              <TouchableOpacity  style={{ marginTop:48 }} onPress={() =>  postbaby()}> <FontAwesome name="plus" color="green" size={20}/></TouchableOpacity>
+            </View>
+
+            <View style={{flex: 8}}>
+              
+            <FlatList
+                data={data}
+                renderItem={({item}) => (
+                  <View style={styles.card}>
+                    <View style={{flexDirection:'row'}}> 
+                      <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity> 
+                      <TouchableOpacity style={{ marginLeft:15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20}/></TouchableOpacity>
+                      <TouchableOpacity style={{ height: 20, width:60, marginLeft:15,  }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20}/></TouchableOpacity>
+                      <TouchableOpacity style={{ marginLeft:5,  }}  onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20}/></TouchableOpacity>
+                      <TouchableOpacity style={{ backgroundColor:"FFF"}}  onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+                keyExtractor={(item) => item.post_id.toString()}
+              />
+            </View>
+          
         </View>
+       
+       
+        
     );
   }
 }
@@ -79,5 +236,112 @@ const UserPosts = () => {
 //     )
 //   }
 // }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow:1,
+      backgroundColor: "#F0FFFF"
+  },
+  text: {
+      fontFamily: "GillSans-SemiBold",
+      color: "#000"
+  },
+
+  card: {
+    fontFamily: "GillSans-SemiBold",
+    backgroundColor: "#61dafb",
+    padding: 10,
+    margin:10,
+    borderRadius:10,
+    height: 100
+  
+},
+  profileImage: {
+      width: 200,
+      height: 200,
+      borderRadius: 100,
+      overflow: "hidden"
+  },
+  button: {
+      alignItems: 'center',
+      backgroundColor: '#F0FFFF',
+      padding: 10,
+      width:100,
+    },
+    button1: {
+      alignItems: 'center',
+      backgroundColor: '#FFF0F5',
+      padding: 10,
+      width:100,
+    },
+    title: {
+      marginTop: 50,
+      //paddingVertical: 8,
+     //borderWidth: 4,
+      //borderColor: "#20232a",
+     // borderRadius: 6,
+      //backgroundColor: "#61dafb",
+      color: "#61dafb",
+      textAlign: "center",
+      fontSize: 50,
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      flex: 1
+    },
+    title1: {
+      marginTop: 10,
+      //paddingVertical: 8,
+     //borderWidth: 4,
+      //borderColor: "#20232a",
+     // borderRadius: 6,
+      //backgroundColor: "#61dafb",
+      color: "#61dafb",
+      textAlign: "center",
+      fontSize: 30,
+      fontStyle:'italic',
+      fontWeight: 'bold'
+    },
+    fname: {
+     
+      marginTop: 45,
+    
+   
+      padding: 1,
+      width:300,
+        // SHAZA LOOK
+     // borderWidth: 4,
+      //borderColor: "#20232a",
+      borderRadius: 500,
+      backgroundColor: "#61dafb",
+      color: "#123456",
+      textAlign: "center",
+      fontSize: 20,
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      textTransform: "uppercase"
+    },
+    fname1: {
+     
+      marginLeft: 15,
+      marginTop:45,
+    height:30,
+   
+      padding: 1,
+      width:300,
+        // SHAZA LOOK
+     // borderWidth: 4,
+      //borderColor: "#20232a",
+      borderRadius: 500,
+      backgroundColor: "#61dafb",
+      color: "#123456",
+      textAlign: "center",
+      fontSize: 20,
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      textTransform: "uppercase"
+    },
+}
+)
 
 export default UserPosts;

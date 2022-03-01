@@ -15,7 +15,7 @@ const Tab = createMaterialTopTabNavigator();
 function FriendScreen({navigation}) {
   return (
     <Tab.Navigator>
-    <Tab.Screen name="friendRequests1" component={friendRequests} />
+    <Tab.Screen name="friendRequests" component={friendRequests} />
     <Tab.Screen name="getMyFriends" component={getMyFriends} />
     
      

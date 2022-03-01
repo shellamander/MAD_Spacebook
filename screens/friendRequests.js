@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {Button, SearchBar} from 'react-native-elements';
 
-const Friends1 = () => {
+const Friends = () => {
   const [search, setSearch] = useState([]);
   const [friend, setFriend] = useState([]);
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -161,4 +161,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Friends1;
+export default Friends;

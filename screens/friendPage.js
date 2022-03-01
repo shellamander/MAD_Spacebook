@@ -27,7 +27,7 @@ const UserProfile = ({navigation}) => {
 
     
     const getUser = async () => {
-        let id = await AsyncStorage.getItem("@spacebook_id");
+        let id = await AsyncStorage.getItem("@spacebook_friend");
         let token = await AsyncStorage.getItem("@spacebook_token");
         let pfp= await AsyncStorage.getItem("@spacebook_pfp")
         console.log(pfp);
@@ -66,64 +66,8 @@ const UserProfile = ({navigation}) => {
     }
 
    
-        const setImagePFP = async () => {
-          let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
-          let id= await AsyncStorage.getItem("@spacebook_id")
-      
-          
-          console.log("ASh", token);
-          fetch("http://localhost:3333/api/1.0.0/user/"+id+"/photo", {
-            method: 'get',
-            headers: {
-              'Content-Type': 'image/png',
-              'X-Authorization': token, //x-authorization
-              //  "session_token":token1,
-            },
-      
-          })
-            .then((response) => {
-             return response.blob();
-            })
-            .then(async (image) => {
-              let data11 = URL.createObjectURL(image);
-              setData1(data11);
-              setIsLoading(false);
-              console.log("ROARRRRRRRRRRRRRRRRRRRRRRR")
-            })
-            .catch((err) => {
-              console.log(err);
-            })
-        }
-
-    const logout = async () => {
+        
    
-        let token = await AsyncStorage.getItem("@spacebook_token");
-      
-        console.log("do i even reach here");
-
-      
-        fetch("http://localhost:3333/api/1.0.0/logout/" , {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Authorization': token
-        }
-        })
-        .then(async (response) => {
-            if (response.status === 200) {
-                console.log("we out")
-                await AsyncStorage.removeItem("@spacebook_token")
-                navigation.navigate('homescreen');
-            } else if (response.status === 400) {
-                throw 'Invalid email or password';
-            } else {
-                throw "Something happened";
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }
 // move the throw error to be viible 
 //check for a;ll the error codes
     if(isLoading){

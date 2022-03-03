@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {Button, SearchBar} from 'react-native-elements';
 
-const Friends = (navigation) => {
+const Friends = ({navigation}) => {
 
   const [friend, setFriend] = useState([]);
   const [friendID, setFriendID] = useState([]);
@@ -67,8 +67,9 @@ const Friends = (navigation) => {
  
     const goToFriend= async(id)=>{
       let friendPage = id;
-      await AsyncStorage.setItem('@spacebook_friend', friendPage);
-      navigation.navigate('friendAccount');
+      console.log(friendPage);
+     // await AsyncStorage.setItem('@spacebook_friend', friendPage);
+      navigation.navigate('friendAccount', {"friend_id": id});
         }
 
 

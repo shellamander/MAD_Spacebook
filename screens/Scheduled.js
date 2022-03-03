@@ -9,7 +9,8 @@ import {
   StyleSheet,
   View,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
   
 } from 'react-native';
 import {Button, SearchBar} from 'react-native-elements';
@@ -17,8 +18,10 @@ import {Button, SearchBar} from 'react-native-elements';
 const Friends = () => {
   const [search, setSearch] = useState('');
   const [friend, setFriend] = useState('');
+  const [text, setText] = useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
+ 
 
   
   useEffect(() => {
@@ -48,6 +51,30 @@ const Friends = () => {
         console.error(error);
       });
   }
+
+  const Searchfor= async()=>{
+
+ 
+    let token = await AsyncStorage.getItem("@spacebook_token");
+  
+    
+      fetch("http://localhost:3333/api/1.0.0/search?q="+text+"&limit=20&offset=0", {
+          method: 'get',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': token
+          }
+          })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          setFilteredDataSource(responseJson);
+          setMasterDataSource(responseJson);
+          console.log(responseJson);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
  
     const addFriend= async(id)=>{
       let token = await AsyncStorage.getItem("@spacebook_token");
@@ -140,14 +167,21 @@ const Friends = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-        <SearchBar
+        {/* <SearchBar
           round
           searchIcon={{size: 24}}
           onChangeText={(text) => searchFilterFunction(text)}
           onClear={(text) => searchFilterFunction('')}
           placeholder="Type Here..."
           value={search}
-        />
+        /> */}
+
+        {/* {draft.map(draft => (
+          <View>{draft}</View>
+        ))} */}
+        
+         <TextInput style={styles.fname1} onChangeText={(text) => setText(text) }value={text}/>
+         <TouchableOpacity onPress={() => Searchfor()}>{ <Text> Submit </Text>}</TouchableOpacity> 
         <FlatList
         
           data={filteredDataSource}
@@ -169,6 +203,26 @@ const styles = StyleSheet.create({
   },
   itemStyle: {
     padding: 10,
+  },
+  fname1: {
+     
+    marginLeft: 15,
+    marginTop:45,
+  height:30,
+ 
+    padding: 1,
+    width:300,
+      // SHAZA LOOK
+   // borderWidth: 4,
+    //borderColor: "#20232a",
+    borderRadius: 500,
+    backgroundColor: "#61dafb",
+    color: "#123456",
+    textAlign: "center",
+    fontSize: 20,
+    fontStyle:'italic',
+    fontWeight: 'bold',
+    textTransform: "uppercase"
   },
 });
 

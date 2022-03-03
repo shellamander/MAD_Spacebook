@@ -47,8 +47,8 @@ function imageProfile() {
     return (
       <View>
         <Imagey/>
-        <Text>Here</Text>
-        <Image style={{width: 100, height: 100}} source={{uri:data}} /> 
+        
+       
       </View>
     );
   }

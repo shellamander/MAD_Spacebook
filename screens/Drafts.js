@@ -1,5 +1,5 @@
 import React, { useState, useEffect  } from 'react';
-import { Text, TextInput, View, Button,StyleSheet} from 'react-native';
+import { Text, TextInput, View, Button,StyleSheet, FlatList} from 'react-native';
 //import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDrawerStatusFromState } from '@react-navigation/drawer';
@@ -8,22 +8,33 @@ import { getDrawerStatusFromState } from '@react-navigation/drawer';
 
 
 
-
-function IDK() {
+function IDK({navigation}) {
   const [texty, setText] = useState('');
   const [token1, setToken] = useState('');
-  console.log(token1)
+  const [draft1, setDraft] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
 
   const test= async () => { 
+    console.log("GOT TO HERE NOW")
     const store =  await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
+    const draft =  await AsyncStorage.getItem("@spacebook_drafts");
+    const draft_list = JSON.parse(draft);
+    console.log("WHERE MY DRAFTS AT:", draft_list)
     setToken(store);
+    setDraft(draft_list);
+    setIsLoading(false);
   }
 
 
-  console.log(texty)
   useEffect(async () => {
+    navigation.addListener("focus", async () => {
+      await test();
+    })
     await test();
+    
     console.log("Should be set", token1);
+    console.log("All my mad uncles", draft1)
     //here
   },[] );  // testing
 
@@ -75,27 +86,38 @@ function IDK() {
   })
 }
 
-
-return (  /// flatlist 
-
+if(isLoading){
+  return(
+    <Text>Loading...</Text>
+  )
+}else{
+  return (
+    <View>
+          <Text style={styles.fname}>Drafts</Text>
+          <TextInput
+              onChangeText={(texty) => setText(texty)}
+              value={texty}
+          />
+         
+          <Button 
+              title="POST"
+              onPress={() => postbaby()}
+              
+          />
   
-  //
-  <View >
-        <Text>Drafts</Text>
-        <TextInput style={styles.fname}
-            onChangeText={(texty) => setText(texty)}
-            value={texty}
-        />
-       
-        <Button 
-            title="POST"
-            onPress={() => postbaby()}
-            
-        />
-        
-    </View>
+          <FlatList
+            data={draft1}
+            renderItem={({item}) => (
+              <Text>{JSON.stringify(item)}</Text>
+            )}
+          />
+      </View>
+  
+  )
 
-)}
+}
+
+}
   
 
 

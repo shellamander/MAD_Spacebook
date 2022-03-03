@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View,StyleSheet, Image,TextInput,Button} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ChangeImage from './Published';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -115,22 +116,19 @@ const UserProfile = () => {
                     if (steve.status === 200) {
                        
                         
-                      console.log("IM HOME HONEY")
-                      return steve.json();
+                  //     setData1(jeffy);
+                  //   //setData1(post_id.first_name);
+                  //   console.log("IHDUFIGSIUGB");
+                  //  // console.log(data1);
+                  //   console.log(jeffy);
+                  //   console.log(post_id.first_name);
+                    //getUser();
+                    setImagePFP();
                     } else if (steve.status === 400) {
                       throw 'Invalid email or password';
                     } else {
                       throw "Something happened";
                     }
-                  }).then(async (jeffy) => {
-                   
-                    setData1(jeffy);
-                    //setData1(post_id.first_name);
-                    console.log("IHDUFIGSIUGB");
-                   // console.log(data1);
-                    console.log(jeffy);
-                    console.log(post_id.first_name);
-                    {getUser}
                   })
                   .catch((err) => {
                     console.log(err);
@@ -139,6 +137,7 @@ const UserProfile = () => {
             
 // move the throw error to be viible 
 //check for a;ll the error codes
+//{changeImage()}
     if(isLoading){
         return (<View><Text>Loading</Text></View>)
         
@@ -150,6 +149,8 @@ const UserProfile = () => {
 
        
         <Image style={styles.profileImage} source={{uri:data1}} />
+        
+        <ChangeImage/> // ASK ASH KUSHUN CAN I PLACE THIS IN TEXT
         <Text>SHALALALALALALALA</Text>
         <TextInput onChangeText={(first_name) => setFname(first_name)}
                     value={first_name} placeholder={data.first_name} placeholderTextColor="#000" />

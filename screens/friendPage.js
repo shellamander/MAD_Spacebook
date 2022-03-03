@@ -1,40 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View,StyleSheet, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import editDetails from './editDetails';
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import {FontAwesome} from '@expo/vector-Icons';
 
 
 // GET END POINT PICTURES FUUUUUUU
 // LOOK AT YOUR HISTORY AND BRING BACK YOUR PATCH REQUEST BOO 
 // prevent them from empty strings 
-const UserProfile = ({navigation}) => {
+const UserProfile = ({route,navigation}) => {
     let [data, setData] = useState({});
     let [photo, setPhoto] = useState({});
     let [isLoading, setIsLoading] = useState(true);
-    let [data1, setData1] = useState({});
+    let [data1, setData1] = useState([]);
     
        
   
     
 
-    useEffect(() => {
-        getUser();
-        setImagePFP();
+    useEffect(async () => {
+        await getUser();
+        
+     
     }, [])
 
     
     const getUser = async () => {
-        let id = await AsyncStorage.getItem("@spacebook_friend");
+
         let token = await AsyncStorage.getItem("@spacebook_token");
-        let pfp= await AsyncStorage.getItem("@spacebook_pfp")
-        console.log(pfp);
-        console.log(id);
+        const {friend_id } = route.params;
+        console.log(friend_id);
 
       
-        fetch("http://localhost:3333/api/1.0.0/user/" + id, {
+        fetch("http://localhost:3333/api/1.0.0/user/" + friend_id, {
         method: 'get',
         headers: {
             'Content-Type': 'application/json',
@@ -52,13 +50,11 @@ const UserProfile = ({navigation}) => {
         }).then(async (user) => {
             console.log(user);
             await setData(user);
-            console.log(data)
-            console.log(data.email)
-            console.log(data.first_name)
-            await setPhoto(pfp);
-            await setIsLoading(false);
-            console.log("hey shawty" , data.first_name);
-            console.log(isLoading, data)
+            //await setIsLoading(false);
+            //console.log(data)
+            
+             await getPost();
+          
            })
         .catch((err) => {
             console.log(err);
@@ -66,6 +62,96 @@ const UserProfile = ({navigation}) => {
     }
 
    
+  const getPost= async ()=> {
+
+    let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
+    const {friend_id } = route.params;
+    console.log(friend_id);
+
+    console.log("ASh", token);
+    fetch("http://localhost:3333/api/1.0.0/user/"+friend_id+"/post", {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token, //x-authorization
+        //  "session_token":token1,
+      },
+
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("IM HOME HONEY")
+          return response.json();
+        } else if (response.status === 400) {
+          throw 'Invalid email or password';
+        } else {
+          throw "Something happened";
+        }
+      }).then(async (post) => {
+        console.log("IM WORKINGGG")
+        
+        //let post_id = post;
+        await setData1(post);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        //post this as a string rather than throwing it 
+      })
+  }
+  const likePost= async(id,post)=>{
+    let token = await AsyncStorage.getItem("@spacebook_token");
+
+      fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post/"+post+"/like",{
+          method: 'post',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': token
+          }
+          })
+        
+        .then((response) => {
+          if (response.status === 200) {
+             console.log("im working and ive rejected you");
+          } else if (response.status === 401) {
+              throw 'Unauthorised';
+          }else if (response.status === 403) {
+            throw 'you liked this already';
+        } else {
+              throw "Something happened";
+          }
+      })
+      .catch((err) => {
+          console.log(err);
+      })
+    }
+
+    const dislikePost= async(id,post)=>{
+      let token = await AsyncStorage.getItem("@spacebook_token");
+  
+        fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post/"+post+"/like",{
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': token
+            }
+            })
+          
+          .then((response) => {
+            if (response.status === 200) {
+               console.log("im working and ");
+            } else if (response.status === 401) {
+                throw 'Unauthorised';
+            }else if (response.status === 403) {
+              throw 'you havent even liked it';
+          } else {
+                throw "Something happened";
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+      }
         
    
 // move the throw error to be viible 
@@ -75,22 +161,35 @@ const UserProfile = ({navigation}) => {
         
     }else{
         return (
-            <View style={{alignItems:'center'}}> 
-
-
-{/* <Text>{pfp}</Text>  <Image source={require()} // lets stosre image in async storage to get it  */}
-
-                 
-       
-       
-        <Image style={styles.profileImage} source={{uri:data1}} />
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.first_name}</Text>
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.last_name}</Text>
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.email}</Text>
-                <TouchableOpacity  style={styles.button} onPress={() => navigation.navigate("edit")}> <Text> Edit Details</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.button1} onPress={() => logout()}> <Text> Logout</Text></TouchableOpacity>
+            <View style={{alignItems:'center'}}>
+                <View style={{flex: 1}}> 
+                    <Text>{data.first_name} {data.last_name}</Text>
+                    <Text>You have {data.friend_count} friends</Text>
+                </View>
                 
+                
+                <View style={{flex: 2}}>
+                    <FlatList
+                        data={data1}
+                        renderItem={({item}) => (
+                            <View style={styles.card}>
+                                <View style={{flexDirection:'row'}}> 
+                                    <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity> 
+                                    <TouchableOpacity style={{ marginLeft:15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20}/></TouchableOpacity>
+                                    <TouchableOpacity style={{ height: 20, width:60, marginLeft:15,  }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20}/></TouchableOpacity>
+                                    </View>
+                            </View>
+                        )}
+                        keyExtractor={(item) => item.post_id.toString()}
+                    />
+             
+
+                </View>
+
             </View>
+
+                
+           
             
         )
         
@@ -103,6 +202,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#F0FFFF"
+    },
+    card: {
+        fontFamily: "GillSans-SemiBold",
+        backgroundColor: "#61dafb",
+        padding: 10,
+        margin:10,
+        borderRadius:10,
+        height: 100
+      
     },
     text: {
         fontFamily: "GillSans-SemiBold",
@@ -130,6 +238,23 @@ const styles = StyleSheet.create({
 )
 
 export default UserProfile;
+
+
+// <FlatList
+// data={data1}
+// renderItem={({item}) => (
+//   <View style={styles.card}>
+//     <View style={{flexDirection:'row'}}> 
+//       <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity> 
+//       <TouchableOpacity style={{ marginLeft:15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20}/></TouchableOpacity>
+//       <TouchableOpacity style={{ height: 20, width:60, marginLeft:15,  }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20}/></TouchableOpacity>
+//       <TouchableOpacity style={{ marginLeft:5,  }}  onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20}/></TouchableOpacity>
+//       <TouchableOpacity style={{ backgroundColor:"FFF"}}  onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+//     </View>
+//   </View>
+// )}
+// keyExtractor={(item) => item.post_id.toString()}
+// />
 
 //PATCH REQUEST IS DOWN THERE SHAZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 

@@ -8,19 +8,44 @@ import Drafts from './Drafts';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-const UserPosts = () => {
+const UserPosts = ({route,navigation}) => {
   let [data, setData] = useState({});
+  const [friend, setFriend] = useState([]);
+  let [frienddata, setFriendData] = useState({});
   let [isLoading, setIsLoading] = useState(true);
   let [texty1, setText1] = useState([]);
+  let [practice, setPractice] = useState([]);
+  const [friendpost, setFriendPost] = useState([]);
+  
   const [texty, setText] = useState('');
   const [draft, setDraft] = useState();
+  const [sob, setSobbing] = useState();
 
-  useEffect(() => {
+
+
+
+
+  
+  const test= async () => { 
+   setSobbing();////////// 
+
+
+  }
+
+
+
+  useEffect(async() => {
+   
+    await test();
+    Searchy();
     getPost();
     (async () => {
-      const draft = await AsyncStorage.getItem("@spacebook_drafts")
+      const draft = await AsyncStorage.getItem("@spacebook_drafts");
       setDraft(JSON.parse(draft))
+     
     })()
+
+    getFriendPost(); //you are undefined for some unhappy reason
   }, [])
 
   console.log('draft', draft)
@@ -56,7 +81,7 @@ const UserPosts = () => {
         let post_id = post;
         setData(post);
 
-        await setIsLoading(false);
+   
 
 
       })
@@ -189,8 +214,109 @@ const UserPosts = () => {
   }
 
 
+  const Searchy= async()=>{
+
+ 
+    let token = await AsyncStorage.getItem("@spacebook_token");
+    let id = await AsyncStorage.getItem("@spacebook_id");
+  
+    
+      fetch("http://localhost:3333/api/1.0.0/user/"+id+"/friends", {
+          method: 'get',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-Authorization': token
+          }
+          })
+          .then((response) => {
+            if (response.status === 200) {
+               console.log("im working: fRIEND EDITION");
+               return response.json();
+            } else if (response.status === 401) {
+                throw 'Unauthorised';
+            }else if (response.status === 403) {
+              throw 'we are friends already';
+          } else {
+                throw "Something happened";
+            }
+        })
+        .then(async (FRIENDLY) => {
+          setFriend(FRIENDLY)
+          await AsyncStorage.setItem('@spacebook_friends', FRIENDLY);
+          console.log("I AM FRIEDNLSY" , FRIENDLY);
+      
+          //should do an array list and loop through thelist setting the neame
+          console.log(FRIENDLY)
+         getFriendPost(FRIENDLY);
+         })
+        .catch((err) => {
+            console.log(err);
+        })
+      }
+
+
+
+  const  getFriendPost = async (sotired) => {
+  console.log("LOOK HERE",sotired);
+//     //<FlatList
+// data={sotired}
+// renderItem={({item}) => (
+//   setPractice(JSON.stringify(item.user_id))
+  
+let token = await AsyncStorage.getItem("@spacebook_token");
+// )}
+// ///>
+sotired?.forEach(element => {
+
+
+  fetch("http://localhost:3333/api/1.0.0/user/" + element.user_id + "/post", {
+    method: 'get',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token
+    }
+    })
+    .then((response) => {
+        if (response.status === 200) {
+            return response.json();
+        } else if (response.status === 400) {
+            throw 'Invalid email or password';
+        } else {
+            throw "Something happened";
+        }
+    }).then(async (user) => {
+        console.log(user);
+        await setFriendPost(user);
+        await setIsLoading(false);
+        //console.log(data)
+       
+         
+      
+       })
+    .catch((err) => {
+       setIsLoading(false);
+        console.log(err);
+    })
+}
+
+  
+);
+
+
+//  console.log("IM A PRACTICE GIRL",practice.user_id);
+//     console.log("who ami i ",friend_id);
+//     console.log("who ami i ",friend_id);
+//     let token = await AsyncStorage.getItem("@spacebook_token");
+    
+//     const {friend_id } = route.params;
+//     console.log("who ami i ",friend_id);
+//lets loop through async storage
+  }
+
+  
+   
   const saveDraft = async (texty) => {
-    const allDrafts = [...draft, texty]
+    const allDrafts = [...draft, texty] //spread operator 
     setDraft(allDrafts)
     await AsyncStorage.setItem("@spacebook_drafts", JSON.stringify(allDrafts));
   }
@@ -213,9 +339,13 @@ const UserPosts = () => {
        
 
          <View>
+        <View>
+  
 
+</View>
 
         <Text style={styles.title}>My Feed</Text>
+        
         <View style={{ flexDirection: 'row', flex: 1 }}>
           <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
           <TouchableOpacity style={{ marginTop: 48 }} onPress={() => saveDraft(texty)}> <FontAwesome name="plus" color="red" size={20} /></TouchableOpacity>
@@ -223,7 +353,9 @@ const UserPosts = () => {
 
         </View>
 
-        <View style={{ flex: 8 }}>
+
+
+         <View style={{ flex: 4 }}>
 
           <FlatList
             data={data}
@@ -237,8 +369,28 @@ const UserPosts = () => {
               </View>
             )}
             keyExtractor={(item) => item.post_id.toString()}
+          /> 
+           </View>
+<View style={{ flex: 8 }}>
+<FlatList
+            data={friendpost}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+                  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.post_id.toString()}
           />
-        </View>
+
+
+</View>
+
+
+       
         {draft.map(draft => (
           <View>{draft}</View>
         ))}

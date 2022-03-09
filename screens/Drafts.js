@@ -5,9 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDrawerStatusFromState } from '@react-navigation/drawer';
 
 
-
-
-
 function IDK({navigation}) {
   const [texty, setText] = useState('');
   const [token1, setToken] = useState('');

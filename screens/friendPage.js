@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View,StyleSheet, Image} from 'react-native';
+import { Text, TextInput,View,StyleSheet, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import {FontAwesome} from '@expo/vector-Icons';
@@ -13,8 +13,9 @@ const UserProfile = ({route,navigation}) => {
     let [photo, setPhoto] = useState({});
     let [isLoading, setIsLoading] = useState(true);
     let [data1, setData1] = useState([]);
+    const {friend_id } = route.params;
     
-       
+    const [texty, setText] = useState('');
   
     
 
@@ -29,7 +30,7 @@ const UserProfile = ({route,navigation}) => {
 
         let token = await AsyncStorage.getItem("@spacebook_token");
         const {friend_id } = route.params;
-        console.log(friend_id);
+        console.log("who ami i ",friend_id);
 
       
         fetch("http://localhost:3333/api/1.0.0/user/" + friend_id, {
@@ -66,7 +67,7 @@ const UserProfile = ({route,navigation}) => {
 
     let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
     const {friend_id } = route.params;
-    console.log(friend_id);
+    console.log("why do i work here but not over there"+friend_id );
 
     console.log("ASh", token);
     fetch("http://localhost:3333/api/1.0.0/user/"+friend_id+"/post", {
@@ -99,6 +100,48 @@ const UserProfile = ({route,navigation}) => {
         //post this as a string rather than throwing it 
       })
   }
+  const postbaby = async () => {
+
+    let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
+    let id = await AsyncStorage.getItem("@spacebook_id")
+    const {friend_id } = route.params;
+    fetch("http://localhost:3333/api/1.0.0/user/" + friend_id + "/post", { // change id 
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': token, //x-authorization
+        //  "session_token":token1,
+      },
+      body: JSON.stringify({
+
+        "text": texty,
+
+      })
+    })
+      .then((steve) => {
+        if (steve.status === 201) {
+          console.log("IM HOME HONEY")
+          return steve.json();
+        } else if (steve.status === 400) {
+          throw 'Invalid email or password';
+        } else {
+          throw "Something happened";
+        }
+      }).then(async (jeff) => {
+        //console.log("IM WORKINGGG")
+        let post_id = jeff.id;
+
+
+        await AsyncStorage.setItem('@post_id', post_id);
+        console.log(post_id)
+        getPost();
+
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
   const likePost= async(id,post)=>{
     let token = await AsyncStorage.getItem("@spacebook_token");
 
@@ -166,6 +209,11 @@ const UserProfile = ({route,navigation}) => {
                     <Text>{data.first_name} {data.last_name}</Text>
                     <Text>You have {data.friend_count} friends</Text>
                 </View>
+
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+          <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
+          <TouchableOpacity style={{ marginTop: 48 }} onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
+        </View>
                 
                 
                 <View style={{flex: 2}}>
@@ -175,8 +223,14 @@ const UserProfile = ({route,navigation}) => {
                             <View style={styles.card}>
                                 <View style={{flexDirection:'row'}}> 
                                     <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity> 
-                                    <TouchableOpacity style={{ marginLeft:15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20}/></TouchableOpacity>
-                                    <TouchableOpacity style={{ height: 20, width:60, marginLeft:15,  }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20}/></TouchableOpacity>
+                                  {item.author.user_id== friend_id?<><TouchableOpacity style={{ marginLeft: 15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20} /></TouchableOpacity><TouchableOpacity style={{ height: 20, width: 60, marginLeft: 15, }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20} /></TouchableOpacity></>
+                                    :<>  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+                                    <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+                                  </>
+                                     }
+                                    <Text style={{ marginLeft:15 }} > {item.author.first_name}</Text>
+                                    
+                      
                                     </View>
                             </View>
                         )}
@@ -203,6 +257,26 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#F0FFFF"
     },
+     fname1: {
+
+    marginLeft: 15,
+    marginTop: 45,
+    height: 30,
+
+    padding: 1,
+    width: 300,
+    // SHAZA LOOK
+    // borderWidth: 4,
+    //borderColor: "#20232a",
+    borderRadius: 500,
+    backgroundColor: "#61dafb",
+    color: "#123456",
+    textAlign: "center",
+    fontSize: 20,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textTransform: "uppercase"
+  },
     card: {
         fontFamily: "GillSans-SemiBold",
         backgroundColor: "#61dafb",

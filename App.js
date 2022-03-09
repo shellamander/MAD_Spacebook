@@ -10,6 +10,7 @@ import EditScreen from './screens/editDetails';
 import FriendPage from './screens/friendPage';
 
 
+
 const Stack = createNativeStackNavigator();
 
 
@@ -22,7 +23,7 @@ function App() {
         <Stack.Screen name="homescreen" component={HomeScreen}  />
         <Stack.Screen name="register" component={RegisterScreen} />
         <Stack.Screen name="edit" component={EditScreen} />
-        <Stack.Screen name="friendAccount" component={FriendPage} />
+        <Stack.Screen name="friendAccount" component={FriendPage} /> 
         <Stack.Screen name="main" component={Main} />
       </Stack.Navigator>
       </NavigationContainer> 

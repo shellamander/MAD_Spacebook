@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, Button, TextInput, StyleSheet } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native-web';
 //import { NavigationContainer } from '@react-navigation/native';
 //import { createNativeStackNavigator } from '@react-navigation/native-stack';
  
@@ -14,6 +15,20 @@ const Login = ({navigation}) => {
     const login = async () => {
         // await AsyncStorage.setItem('@spacebook_token', "kbsdvkjbwvbj");
         // navigation.navigate("Home");
+        //apply some cheeky regex?
+if (!first_name.trim()) {
+   Alert.alert("Alert","FIRST name is emptyyy");
+   return;
+}  //necessary for email  // 
+
+if(!last_name.trim()) {
+    return Alert("last name is emptyyy")
+};
+
+
+
+
+        
         fetch("http://localhost:3333/api/1.0.0/user", {
             method: 'post',
             headers: {
@@ -65,6 +80,7 @@ const Login = ({navigation}) => {
             <TextInput
                 onChangeText={(pass) => setPassword(pass)}
                 value={password}
+            
             />
             <Button
                 title="register"

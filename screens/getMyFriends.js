@@ -14,11 +14,13 @@ import {
   
 } from 'react-native';
 import {Button, SearchBar} from 'react-native-elements';
+import { useImperativeHandle } from 'react/cjs/react.production.min';
 
 const Friends = ({navigation}) => {
 
   const [friend, setFriend] = useState([]);
   const [friendID, setFriendID] = useState([]);
+  const [practice, setPractice] = useState([]);
   console.log("RARARARA",friendID)
 
 
@@ -55,10 +57,13 @@ const Friends = ({navigation}) => {
       })
       .then(async (FRIENDLY) => {
         setFriend(FRIENDLY)
+        await AsyncStorage.setItem('@spacebook_friends', FRIENDLY);
+        console.log("I AM FRIEDNLSY" + FRIENDLY.id);
         setFriendID(FRIENDLY)
         //should do an array list and loop through thelist setting the neame
         console.log(FRIENDLY)
         console.log("im tryna be friend w you " ,friendID)
+        upset();
        })
       .catch((err) => {
           console.log(err);
@@ -70,8 +75,27 @@ const Friends = ({navigation}) => {
       console.log(friendPage);
      // await AsyncStorage.setItem('@spacebook_friend', friendPage);
       navigation.navigate('friendAccount', {"friend_id": id});
+    
+      // navigation.navigate('main', {
+      //   screen: 'Account',
+      //   params: { 'friend_id': id }
+      // })
         }
 
+        const upset= async()=>{
+
+          {friend.map(async friend1 => (
+  
+      
+             await AsyncStorage.setItem('@spacebook_friends', friend1)
+           
+               
+            
+            ) ) }
+  
+            console.log("I HOPE IM SUCCESSFULLY SETTING THIS "+ AsyncStorage.getItem('@spacebook_friends'));
+            }
+    
 
 
 
@@ -91,11 +115,12 @@ const Friends = ({navigation}) => {
   
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
+        
      
         {friend.map(friend1 => (
-  
+             
           <View>
-            
+          
             <TouchableOpacity  onPress={() => goToFriend(friend1.user_id)} style={styles.myButton}  >{friend1.user_givenname} </TouchableOpacity> 
              
              </View>

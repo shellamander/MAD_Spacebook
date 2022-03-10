@@ -204,7 +204,7 @@ const UserProfile = ({route,navigation}) => {
         
     }else{
         return (
-            <View style={{alignItems:'center'}}>
+            <View style={styles.container}>
                 <View style={{flex: 1}}> 
                     <Text>{data.first_name} {data.last_name}</Text>
                     <Text>You have {data.friend_count} friends</Text>
@@ -239,6 +239,9 @@ const UserProfile = ({route,navigation}) => {
              
 
                 </View>
+                
+                <TouchableOpacity style={styles.button} title="Login"
+                onPress={() => navigation.goBack()}> <Text> Return to Fruends</Text></TouchableOpacity>
 
             </View>
 
@@ -253,10 +256,11 @@ const UserProfile = ({route,navigation}) => {
     
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F0FFFF"
-    },
+  container: {
+    flex: 4,
+    backgroundColor: "#F0FFFF",
+    textAlign: "center",
+},
      fname1: {
 
     marginLeft: 15,
@@ -297,11 +301,21 @@ const styles = StyleSheet.create({
         overflow: "hidden"
     },
     button: {
-        alignItems: 'center',
-        backgroundColor: '#F0FFFF',
-        padding: 10,
-        width:100,
-      },
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      alignItems: 'center',
+      backgroundColor: "#61dafb",
+      padding: 10,
+      width:150,
+      flexDirection: 'row',
+      marginLeft:100,
+      margin:50,
+      marginBottom: 10,
+      textAlign: "center",
+      
+  alignItems: "center",
+      
+    },
       button1: {
         alignItems: 'center',
         backgroundColor: '#FFF0F5',

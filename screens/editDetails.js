@@ -9,7 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 // GET END POINT PICTURES FUUUUUUU
 // LOOK AT YOUR HISTORY AND BRING BACK YOUR PATCH REQUEST BOO
-const UserProfile = () => {
+const UserProfile = ({navigation}) => {
     let [data, setData] = useState({});
     let [photo, setPhoto] = useState({});
     const [first_name, setFname] = useState("");
@@ -143,28 +143,34 @@ const UserProfile = () => {
         
     }else{
         return (
-            <View style={{alignItems:'center'}}> 
+            <View style={styles.container}> 
 
 
 
        
         <Image style={styles.profileImage} source={{uri:data1}} />
         
-        <ChangeImage/> // ASK ASH KUSHUN CAN I PLACE THIS IN TEXT
-        <Text>SHALALALALALALALA</Text>
-        <TextInput onChangeText={(first_name) => setFname(first_name)}
-                    value={first_name} placeholder={data.first_name} placeholderTextColor="#000" />
-<TextInput onChangeText={(last_name) => setSname(last_name)}
-                    value={last_name} placeholder={data.last_name} placeholderTextColor="#000" />
+        <ChangeImage/> 
+       
+        <TextInput  style={styles.fname} onChangeText={(first_name) => setFname(first_name)}
+                    value={first_name} placeholder="Input first name" placeholderTextColor="#000" />
+<TextInput  style={styles.fname} onChangeText={(last_name) => setSname(last_name)}
+                    value={last_name} placeholder="Input last name"  placeholderTextColor="#000" />
 
-<TextInput onChangeText={(email) => setEmail(email)}
-                    value={email} placeholder={data.email} placeholderTextColor="#000" />
+<TextInput  style={styles.fname} onChangeText={(email) => setEmail(email)}
+                    value={email} placeholder="Input email"  placeholderTextColor="#000" />
 
-<TextInput onChangeText={(password) => setPassword(password)}
-                    value={password} placeholder={data.password} placeholderTextColor="#000" />
+<TextInput   style={styles.fname} onChangeText={(password) => setPassword(password)}
+                    value={password} placeholder="Input password"  placeholderTextColor="#000" />
 
-    <Button title="Update" onPress={() => update()}
-    />
+
+
+<TouchableOpacity style={styles.button} title="Login"
+                onPress={() => update()}> <Text> Update</Text></TouchableOpacity>
+
+                 <TouchableOpacity style={styles.button} title="Login"
+                onPress={() => navigation.goBack()}> <Text> return</Text></TouchableOpacity>
+               
      
             </View>
             
@@ -176,32 +182,72 @@ const UserProfile = () => {
     
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F0FFFF"
+  container: {
+      flex: 1,
+      backgroundColor: "#F0FFFF",
+      textAlign: "center",
+  },
+  profileImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    overflow: "hidden",
+    alignItems: 'center',
+   marginLeft:100
+},
+  
+text:{
+  fontStyle:'italic',
+  fontWeight: 'bold',
+},
+  button: {
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      alignItems: 'center',
+      backgroundColor: "#61dafb",
+      padding: 10,
+      width:150,
+      flexDirection: 'row',
+      marginLeft:100,
+      margin:50,
+      marginBottom: 10,
+      textAlign: "center",
+      
+  alignItems: "center",
+      
     },
-    text: {
-        fontFamily: "GillSans-SemiBold",
-        color: "#000"
+  
+    title: { 
+      marginTop: 100,
+      color: "#61dafb",
+      textAlign: "center",
+      fontSize: 50,
+      fontStyle:'italic',
+      fontWeight: 'bold'
     },
-    profileImage: {
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        overflow: "hidden"
+    title1: {
+      marginTop: 10,
+      color: "#61dafb",
+      textAlign: "center",
+      fontSize: 30,
+      fontStyle:'italic',
+      fontWeight: 'bold'
     },
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#F0FFFF',
-        padding: 10,
-        width:100,
-      },
-      button1: {
-        alignItems: 'center',
-        backgroundColor: '#FFF0F5',
-        padding: 10,
-        width:100,
-      },
+    fname: {
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      flexDirection: 'row',
+      backgroundColor: "#61dafb",
+  borderRadius: 5,
+  width: "70%",
+  height: 45,
+  marginBottom: 10,
+  textAlign: "center",
+  margin:50,
+
+  alignItems: "center",
+    },
+   
 }
 )
 

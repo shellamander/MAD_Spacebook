@@ -4,6 +4,7 @@ import { Text, TextInput, Button, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-Icons';
+import Userprofile from "./userprofile"
 import Drafts from './Drafts';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -285,7 +286,7 @@ sotired?.forEach(element => {
             throw "Something happened";
         }
     }).then(async (user) => {
-        console.log(user);
+        console.log("check",user);
         await setFriendPost(user);
         await setIsLoading(false);
         //console.log(data)
@@ -338,30 +339,26 @@ sotired?.forEach(element => {
 
        
 
-         <View>
-        <View>
-  
-
-</View>
-
+         <View style={styles.container}>
+            <Userprofile/>
         <Text style={styles.title}>My Feed</Text>
         
-        <View style={{ flexDirection: 'row', flex: 1 }}>
+        <View style={{ flexDirection: 'row', flex: 2,  }}>
           <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
-          <TouchableOpacity style={{ marginTop: 48 }} onPress={() => saveDraft(texty)}> <FontAwesome name="plus" color="red" size={20} /></TouchableOpacity>
-          <TouchableOpacity style={{ marginTop: 48 }} onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
+          <TouchableOpacity  onPress={() => saveDraft(texty)}> <FontAwesome name="plus" color="red" size={20} /></TouchableOpacity>
+          <TouchableOpacity  onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
 
         </View>
 
 
 
-         <View style={{ flex: 4 }}>
+          <View style={{ flex: 18}} >
 
-          <FlatList
+           <FlatList
             data={data}
             renderItem={({ item }) => (
               <View style={styles.card}>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'column' }}>
                   <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
                   <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
                   <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
@@ -370,8 +367,10 @@ sotired?.forEach(element => {
             )}
             keyExtractor={(item) => item.post_id.toString()}
           /> 
-           </View>
-<View style={{ flex: 8 }}>
+         
+           </View>  
+           
+<View style={{ flex: 3}}>
 <FlatList
             data={friendpost}
             renderItem={({ item }) => (
@@ -390,10 +389,7 @@ sotired?.forEach(element => {
 </View>
 
 
-       
-        {draft.map(draft => (
-          <View>{draft}</View>
-        ))}
+      
 
       </View>
     );
@@ -411,7 +407,7 @@ sotired?.forEach(element => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    // flexGrow: 1,
     backgroundColor: "#F0FFFF"
   },
   text: {
@@ -420,7 +416,10 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    fontFamily: "GillSans-SemiBold",
+    //fontFamily: "GillSans-SemiBold",
+    fontStyle:'italic',
+    fontWeight: 'bold',
+    fontSize:20,
     backgroundColor: "#61dafb",
     padding: 10,
     margin: 10,
@@ -447,7 +446,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   title: {
-    marginTop: 50,
+    // marginTop: 50,
     //paddingVertical: 8,
     //borderWidth: 4,
     //borderColor: "#20232a",
@@ -475,7 +474,7 @@ const styles = StyleSheet.create({
   },
   fname: {
 
-    marginTop: 45,
+    // marginTop: 45,
 
 
     padding: 1,
@@ -495,7 +494,7 @@ const styles = StyleSheet.create({
   fname1: {
 
     marginLeft: 15,
-    marginTop: 45,
+    // marginTop: 45,
     height: 30,
 
     padding: 1,

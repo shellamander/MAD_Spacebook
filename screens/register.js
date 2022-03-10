@@ -1,8 +1,8 @@
  
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Button, TextInput, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, Button, TextInput, StyleSheet, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native-web';
+
 //import { NavigationContainer } from '@react-navigation/native';
 //import { createNativeStackNavigator } from '@react-navigation/native-stack';
  
@@ -11,22 +11,34 @@ const Login = ({navigation}) => {
     const [last_name, setSname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState('')
+
+
+
+// have a check password field here maybe?
+
+
+
+
 
     const login = async () => {
         // await AsyncStorage.setItem('@spacebook_token', "kbsdvkjbwvbj");
         // navigation.navigate("Home");
         //apply some cheeky regex?
-if (!first_name.trim()) {
+
+if (first_name === "" || last_name == "" || email === "") {
    Alert.alert("Alert","FIRST name is emptyyy");
-   return;
+   console.log(" no empty")
+   setErrorMessage('all fields must be filled')
+   
 }  //necessary for email  // 
 
-if(!last_name.trim()) {
-    return Alert("last name is emptyyy")
-};
+// if(!last_name.trim()) {
+//     return Alert("last name is emptyyy")
+// };
 
 
-
+else{
 
         
         fetch("http://localhost:3333/api/1.0.0/user", {
@@ -59,44 +71,111 @@ if(!last_name.trim()) {
             console.log(err);
         })
     }
-       
-       
+}
+     
 
     return (
-        <View>
-            <Text>Login</Text>
-            <TextInput
+        <View style={styles.container}>
+            <Text>{errorMessage}</Text>
+            <Text style={styles.title}>Register</Text>
+            <TextInput style={styles.fname}
                 onChangeText={(first_name) => setFname(first_name)}
                 value={first_name}
+                placeholder="Input first name"
             />
             <TextInput
+            style={styles.fname}
                 onChangeText={(last_name) => setSname(last_name)}
                 value={last_name}
+                placeholder="Input surname"
             />
             <TextInput
+            style={styles.fname}
                 onChangeText={(email) => setEmail(email)}
                 value={email}
+                placeholder="Input email"
             />
             <TextInput
+            style={styles.fname}
                 onChangeText={(pass) => setPassword(pass)}
                 value={password}
+                placeholder="Input password"
             
             />
-            <Button
-                title="register"
-                onPress={() => login()}
-            />
+          
+               <TouchableOpacity style={styles.button} title="Login"
+                onPress={() => login()}> <Text> Register</Text></TouchableOpacity>
+               
 
-            <Button
-                title="Go home"
-                onPress={() => navigation.goBack()}
-            />
+            <TouchableOpacity style={styles.button} title="Login"
+                onPress={() => navigation.navigate("homescreen")}> <Text> Login</Text></TouchableOpacity>
+               
            
         </View>
     )
 
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 4,
+        backgroundColor: "#F0FFFF",
+        textAlign: "center",
+    },
+    
+text:{
+    fontStyle:'italic',
+    fontWeight: 'bold',
+},
+    button: {
+        fontStyle:'italic',
+        fontWeight: 'bold',
+        alignItems: 'center',
+        backgroundColor: "#61dafb",
+        padding: 10,
+        width:150,
+        flexDirection: 'row',
+        marginLeft:100,
+        margin:50,
+        marginBottom: 10,
+        textAlign: "center",
+        
+    alignItems: "center",
+        
+      },
+    
+      title: { 
+        marginTop: 100,
+        color: "#61dafb",
+        textAlign: "center",
+        fontSize: 50,
+        fontStyle:'italic',
+        fontWeight: 'bold'
+      },
+      title1: {
+        marginTop: 10,
+        color: "#61dafb",
+        textAlign: "center",
+        fontSize: 30,
+        fontStyle:'italic',
+        fontWeight: 'bold'
+      },
+      fname: {
+        fontStyle:'italic',
+        fontWeight: 'bold',
+        flexDirection: 'row',
+        backgroundColor: "#61dafb",
+    borderRadius: 5,
+    width: "70%",
+    height: 45,
+    marginBottom: 10,
+    textAlign: "center",
+    margin:50,
  
+    alignItems: "center",
+      },
+     
+}
+)
 // const Login = ({navigation}) => { // you used an arrow function shaza
 
 //  //const Reno=()= >{

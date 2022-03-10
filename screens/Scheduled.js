@@ -138,9 +138,9 @@ const Friends = () => {
           {item.user_givenname}
       </Text>
       <TouchableOpacity
-       style={{ height: 20, width:100, backgroundColor:'#FF5733' }} onPress={() => addFriend(item.user_id)}
+       style={{ height: 20, width:100, backgroundColor:"#61dafb" }} onPress={() => addFriend(item.user_id)}
       >
-        <Text>Add Friend</Text>
+        <Text >Add Friend</Text>
       </TouchableOpacity>
       </View>
     );
@@ -165,23 +165,14 @@ const Friends = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView >
       <View style={styles.container}>
-        {/* <SearchBar
-          round
-          searchIcon={{size: 24}}
-          onChangeText={(text) => searchFilterFunction(text)}
-          onClear={(text) => searchFilterFunction('')}
-          placeholder="Type Here..."
-          value={search}
-        /> */}
-
-        {/* {draft.map(draft => (
-          <View>{draft}</View>
-        ))} */}
+       
         
-         <TextInput style={styles.fname1} onChangeText={(text) => setText(text) }value={text}/>
-         <TouchableOpacity onPress={() => Searchfor()}>{ <Text> Submit </Text>}</TouchableOpacity> 
+         <TextInput style={styles.fname1} placeholder="Search for friends" onChangeText={(text) => setText(text) }value={text}/>
+         <TouchableOpacity style={styles.button}   onPress={() => Searchfor()}>{ <Text> Submit </Text>}</TouchableOpacity> 
+  
+        <View>
         <FlatList
         
           data={filteredDataSource}
@@ -191,6 +182,7 @@ const Friends = () => {
          
           
         />
+        </View>
        
       </View>
     </SafeAreaView>
@@ -199,19 +191,37 @@ const Friends = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    flex: 4,
+    backgroundColor: "#F0FFFF",
+  
+   
+  },
+  button: {
+    fontStyle:'italic',
+    fontWeight: 'bold',
+    
+    backgroundColor: "#61dafb",
+    padding: 10,
+    width:150,
+    marginLeft:100,
+    margin:10,
+    marginBottom: 10,
+  
+    
+alignItems: "center",
+    
   },
   itemStyle: {
     padding: 10,
   },
   fname1: {
      
-    marginLeft: 15,
+  //   marginLeft: 15,
     marginTop:45,
-  height:30,
+  // height:30,
+ alignItems:'center',
  
-    padding: 1,
-    width:300,
+    width:"100%",
       // SHAZA LOOK
    // borderWidth: 4,
     //borderColor: "#20232a",

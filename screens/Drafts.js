@@ -1,8 +1,9 @@
 import React, { useState, useEffect  } from 'react';
 import { Text, TextInput, View, Button,StyleSheet, FlatList} from 'react-native';
-//import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDrawerStatusFromState } from '@react-navigation/drawer';
+import { FontAwesome } from '@expo/vector-Icons';
 
 
 function IDK({navigation}) {
@@ -89,9 +90,11 @@ if(isLoading){
   )
 }else{
   return (
-    <View>
-          <Text style={styles.fname}>Drafts</Text>
+    <View style={styles.container}>
+          <Text style={styles.title}>Drafts</Text>
           <TextInput
+          style={styles.fname}
+          placeholder="write here :)"
               onChangeText={(texty) => setText(texty)}
               value={texty}
           />
@@ -105,7 +108,14 @@ if(isLoading){
           <FlatList
             data={draft1}
             renderItem={({item}) => (
-              <Text>{JSON.stringify(item)}</Text>
+              <View style={styles.card}>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={() => console.log(item.post_id)}>{JSON.stringify(item)}</TouchableOpacity>
+                  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+                </View>
+              </View>
+            
             )}
           />
       </View>

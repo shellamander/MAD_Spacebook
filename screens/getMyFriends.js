@@ -115,26 +115,19 @@ const Friends = ({navigation}) => {
   
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-        
+      <Text style={styles.title1}>My Friends</Text>
      
         {friend.map(friend1 => (
              
           <View>
           
-            <TouchableOpacity  onPress={() => goToFriend(friend1.user_id)} style={styles.myButton}  >{friend1.user_givenname} </TouchableOpacity> 
+            <TouchableOpacity  onPress={() => goToFriend(friend1.user_id)} style={styles.fname}  ><Text style={{textAlign:"center"}}> {friend1.user_givenname}</Text> </TouchableOpacity> 
              
              </View>
           ) ) }
 
           
-{friendID.map(friend2 => (
-  
-  <View>
-    
-    <Text style={styles.myButton}  >{friend2.user_id} </Text> 
-     
-     </View>
-))}
+
        
       </View>
     </SafeAreaView>
@@ -146,15 +139,64 @@ const Friends = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+      flex: 4,
+      backgroundColor: "#F0FFFF",
+      textAlign: "center",
   },
-  itemStyle: {
-    padding: 10,
-  },
-  myButton: {
-    padding: 30,
-    backgroundColor: 'pink'
-  }
-});
+  
+text:{
+  fontStyle:'italic',
+  fontWeight: 'bold',
+},
+  button: {
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      alignItems: 'center',
+      backgroundColor: "#61dafb",
+      padding: 10,
+      width:150,
+      flexDirection: 'row',
+      marginLeft:100,
+      margin:50,
+      marginBottom: 10,
+      textAlign: "center",
+      
+  alignItems: "center",
+      
+    },
+  
+    title: { 
+      marginTop: 100,
+      color: "#61dafb",
+      textAlign: "center",
+      fontSize: 50,
+      fontStyle:'italic',
+      fontWeight: 'bold'
+    },
+    title1: {
+      marginTop: 10,
+      color: "#61dafb",
+      textAlign: "center",
+      fontSize: 30,
+      fontStyle:'italic',
+      fontWeight: 'bold'
+    },
+    fname: {
+      fontStyle:'italic',
+      fontWeight: 'bold',
+      flexDirection: 'row',
+      backgroundColor: "#61dafb",
+  borderRadius: 5,
+  width: "70%",
+  height: 45,
+  marginBottom: 10,
+  textAlign: "center",
+  margin:50,
+
+  alignItems: "center",
+    },
+   
+}
+)
 
 export default Friends;

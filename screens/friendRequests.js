@@ -128,11 +128,11 @@ const Friends = () => {
   
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-     
+      <Text style={styles.title1}>Friend Requests</Text>
         
         {friend.map(friend1 => (
           <View>
-            
+             
             <TouchableOpacity onPress={() => console.log(friend1)} style={styles.myButton}>{friend1.first_name}</TouchableOpacity> 
             <TouchableOpacity  onPress={() => acceptFriend(friend1.user_id)}> <Text> ACCEPT FRIEND</Text></TouchableOpacity>
             <TouchableOpacity  onPress={() => rejectFriend(friend1.user_id)}> <Text> REJECT FRIEND</Text></TouchableOpacity>
@@ -150,7 +150,9 @@ const Friends = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    flex: 4,
+    backgroundColor: "#F0FFFF",
+    textAlign: "center",
   },
   itemStyle: {
     padding: 10,
@@ -158,7 +160,15 @@ const styles = StyleSheet.create({
   myButton: {
     padding: 30,
     backgroundColor: 'pink'
-  }
+  },
+  title1: {
+    marginTop: 10,
+    color: "#61dafb",
+    textAlign: "center",
+    fontSize: 30,
+    fontStyle:'italic',
+    fontWeight: 'bold'
+  },
 });
 
 export default Friends;

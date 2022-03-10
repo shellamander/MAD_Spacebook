@@ -137,15 +137,14 @@ const UserProfile = ({navigation}) => {
 {/* <Text>{pfp}</Text>  <Image source={require()} // lets stosre image in async storage to get it  */}
 
                  
-       
+     
        
         <Image style={styles.profileImage} source={{uri:data1}} />
                 <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.first_name}</Text>
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.last_name}</Text>
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.email}</Text>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity  style={styles.button} onPress={() => navigation.navigate("edit")}> <Text> Edit Details</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.button1} onPress={() => logout()}> <Text> Logout</Text></TouchableOpacity>
-                
+                <TouchableOpacity style={styles.button} onPress={() => logout()}> <Text> Logout</Text></TouchableOpacity>
+                </View>
             </View>
             
         )
@@ -171,10 +170,13 @@ const styles = StyleSheet.create({
         overflow: "hidden"
     },
     button: {
+        flexDirection:'column',
         alignItems: 'center',
-        backgroundColor: '#F0FFFF',
+        backgroundColor: "#61dafb",
         padding: 10,
         width:100,
+        margin:10,
+        
       },
       button1: {
         alignItems: 'center',

@@ -51,8 +51,9 @@ const Login = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            {/* <Text style={styles.title}>Spacebook</Text> */}
+             <Text style={styles.title}>Spacebook</Text> 
             <Text style={styles.title1}>Login</Text>
+
             <TextInput
             style={styles.fname}
                 onChangeText={(email) => setEmail(email)}
@@ -64,11 +65,11 @@ const Login = ({navigation}) => {
                 value={password}
                 secureTextEntry
             />
-            <TouchableOpacity style={styles.fname} title="Login"
-                onPress={() => login()}> <Text>Login</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.button} title="Login"
+                onPress={() => login()}> <Text style={styles.text}>Login</Text></TouchableOpacity>
                
            
-            <TouchableOpacity style={styles.fname} title="Register"
+            <TouchableOpacity style={styles.button} title="Register"
                 onPress={() => navigation.navigate("register")}> <Text> Make An Account</Text></TouchableOpacity>
                
             
@@ -78,38 +79,34 @@ const Login = ({navigation}) => {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#F0FFFF"
+        flex: 4,
+        backgroundColor: "#F0FFFF",
+        textAlign: "center",
     },
-    text: {
-        fontFamily: "GillSans-SemiBold",
-        color: "#000"
-    },
-    profileImage: {
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        overflow: "hidden"
-    },
+    
+text:{
+    fontStyle:'italic',
+    fontWeight: 'bold',
+},
     button: {
+        fontStyle:'italic',
+        fontWeight: 'bold',
         alignItems: 'center',
-        backgroundColor: '#F0FFFF',
+        backgroundColor: "#61dafb",
         padding: 10,
-        width:100,
+        width:150,
+        flexDirection: 'row',
+        marginLeft:100,
+        margin:50,
+        marginBottom: 10,
+        textAlign: "center",
+        
+    alignItems: "center",
+        
       },
-      button1: {
-        alignItems: 'center',
-        backgroundColor: '#FFF0F5',
-        padding: 10,
-        width:100,
-      },
-      title: {
+    
+      title: { 
         marginTop: 100,
-        //paddingVertical: 8,
-       //borderWidth: 4,
-        //borderColor: "#20232a",
-       // borderRadius: 6,
-        //backgroundColor: "#61dafb",
         color: "#61dafb",
         textAlign: "center",
         fontSize: 50,
@@ -118,11 +115,6 @@ const styles = StyleSheet.create({
       },
       title1: {
         marginTop: 10,
-        //paddingVertical: 8,
-       //borderWidth: 4,
-        //borderColor: "#20232a",
-       // borderRadius: 6,
-        //backgroundColor: "#61dafb",
         color: "#61dafb",
         textAlign: "center",
         fontSize: 30,
@@ -130,23 +122,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
       },
       fname: {
-       
-        marginTop: 45,
-     
-        padding: 1,
-        width:300,
-          // SHAZA LOOK
-       // borderWidth: 4,
-        //borderColor: "#20232a",
-        borderRadius: 500,
-        backgroundColor: "#61dafb",
-        color: "#123456",
-        textAlign: "center",
-        fontSize: 20,
         fontStyle:'italic',
         fontWeight: 'bold',
-        textTransform: "uppercase"
+        flexDirection: 'row',
+        backgroundColor: "#61dafb",
+    borderRadius: 5,
+    width: "70%",
+    height: 45,
+    marginBottom: 10,
+    textAlign: "center",
+    margin:50,
+ 
+    alignItems: "center",
       },
+     
 }
 )
 

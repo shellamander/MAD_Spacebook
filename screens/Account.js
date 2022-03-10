@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, TextInput, Button, View, StyleSheet } from 'react-native';
+import { Text,Switch, TextInput, Button, View, StyleSheet } from 'react-native';
 //import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -21,9 +21,12 @@ const UserPosts = ({route,navigation}) => {
   const [texty, setText] = useState('');
   const [draft, setDraft] = useState();
   const [sob, setSobbing] = useState();
+  const [isEnabled, setIsEnabled] = useState(true);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
 
-
+////// {this.state.value == 'news'? <Text>data</Text>: null }
+// if light mode == true then all the return statement in their 
 
 
   
@@ -50,6 +53,8 @@ const UserPosts = ({route,navigation}) => {
   }, [])
 
   console.log('draft', draft)
+  console.log("im checking a bunch", isEnabled)
+  // if im enabled is true enter dark mode
 
 
   const getPost = async () => {
@@ -92,7 +97,7 @@ const UserPosts = ({route,navigation}) => {
       })
   }
 
-
+ 
   const likePost = async (id, post) => {
     let token = await AsyncStorage.getItem("@spacebook_token");
 
@@ -322,9 +327,77 @@ sotired?.forEach(element => {
     await AsyncStorage.setItem("@spacebook_drafts", JSON.stringify(allDrafts));
   }
 
+  
 
-  if (isLoading) {
-    return (<View><Text>Loading</Text></View>)
+
+  if (isEnabled) {
+    return (
+
+
+
+       
+      <View style={styles.container1}>
+    
+
+    
+      <Userprofile/>
+  <Text style={styles.title}>My Feed</Text>
+  
+  <View style={{ flexDirection: 'row', flex: 2,  }}>
+    <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
+    <TouchableOpacity  onPress={() => saveDraft(texty)}> <FontAwesome name="plus" color="red" size={20} /></TouchableOpacity>
+    <TouchableOpacity  onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
+
+  </View>
+  <Switch value={isEnabled} onValueChange={toggleSwitch}/>
+
+
+    <View style={{ flex: 18}} >
+
+     <FlatList
+      data={data}
+      renderItem={({ item }) => (
+        <View style={styles.card}>
+          <View style={{ flexDirection: 'column' }}>
+            <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+          </View>
+        </View>
+      )}
+      keyExtractor={(item) => item.post_id.toString()}
+    /> 
+   
+     </View>  
+     
+<View style={{ flex: 3}}>
+<FlatList
+      data={friendpost}
+      renderItem={({ item }) => (
+        <View style={styles.card}>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+          </View>
+        </View>
+      )}
+      keyExtractor={(item) => item.post_id.toString()}
+    />
+
+
+</View>
+
+
+
+
+</View>
+);
+
+
+
+
+    
   } else {
     // const rawr = data.map((post)=>{   
     //   (post.post_id);  
@@ -338,62 +411,74 @@ sotired?.forEach(element => {
       //my scroll wont work booo :(
 
        
+        <View style={styles.container}>
+    
 
-         <View style={styles.container}>
-            <Userprofile/>
-        <Text style={styles.title}>My Feed</Text>
-        
-        <View style={{ flexDirection: 'row', flex: 2,  }}>
-          <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
-          <TouchableOpacity  onPress={() => saveDraft(texty)}> <FontAwesome name="plus" color="red" size={20} /></TouchableOpacity>
-          <TouchableOpacity  onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
+      
+        <Userprofile/>
+    <Text style={styles.title}>My Feed</Text>
+    
+    <View style={{ flexDirection: 'row', flex: 2,  }}>
+      <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
+      <TouchableOpacity  onPress={() => saveDraft(texty)}> <FontAwesome name="plus" color="red" size={20} /></TouchableOpacity>
+      <TouchableOpacity  onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
 
-        </View>
+    </View>
+    <Switch value={isEnabled} onValueChange={toggleSwitch}/>
 
 
+      <View style={{ flex: 18}} >
 
-          <View style={{ flex: 18}} >
-
-           <FlatList
-            data={data}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <View style={{ flexDirection: 'column' }}>
-                  <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
-                  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
-                </View>
-              </View>
-            )}
-            keyExtractor={(item) => item.post_id.toString()}
-          /> 
-         
-           </View>  
-           
+       <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <View style={{ flexDirection: 'column' }}>
+              <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+              <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+            </View>
+          </View>
+        )}
+        keyExtractor={(item) => item.post_id.toString()}
+      /> 
+     
+       </View>  
+       
 <View style={{ flex: 3}}>
 <FlatList
-            data={friendpost}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <View style={{ flexDirection: 'row' }}>
-                  <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
-                  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
-                </View>
-              </View>
-            )}
-            keyExtractor={(item) => item.post_id.toString()}
-          />
+        data={friendpost}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+              <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+            </View>
+          </View>
+        )}
+        keyExtractor={(item) => item.post_id.toString()}
+      />
 
 
 </View>
 
 
-      
+  
 
-      </View>
-    );
-  }
+  </View>
+);
+}
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -409,6 +494,10 @@ const styles = StyleSheet.create({
   container: {
     // flexGrow: 1,
     backgroundColor: "#F0FFFF"
+  },
+  container1: {
+    // flexGrow: 1,
+    backgroundColor: "#000"
   },
   text: {
     fontFamily: "GillSans-SemiBold",

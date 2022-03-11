@@ -7,6 +7,7 @@ import HomeScreen from './screens/homescreen';
 import RegisterScreen from './screens/register';
 import Main from './screens/main';
 import EditScreen from './screens/editDetails';
+import EditPosts from './screens/editPosts';
 import FriendPage from './screens/friendPage';
 
 
@@ -23,6 +24,7 @@ function App() {
         <Stack.Screen name="homescreen" component={HomeScreen}  />
         <Stack.Screen name="register" component={RegisterScreen} />
         <Stack.Screen name="edit" component={EditScreen} />
+        <Stack.Screen name="editPosts" component={EditPosts} />
         <Stack.Screen name="friendAccount" component={FriendPage} /> 
         <Stack.Screen name="main" component={Main} />
       </Stack.Navigator>

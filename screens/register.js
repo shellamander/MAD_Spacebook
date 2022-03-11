@@ -11,7 +11,12 @@ const Login = ({navigation}) => {
     const [last_name, setSname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState('')
+    const [password1, setPassword1] = useState("");
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage1, setErrorMessage1] = useState('');
+    const [errorMessage2, setErrorMessage2] = useState('');
+    const [errorMessage3, setErrorMessage3] = useState('')
+
 
 
 
@@ -27,15 +32,26 @@ const Login = ({navigation}) => {
         //apply some cheeky regex?
 
 if (first_name === "" || last_name == "" || email === "") {
-   Alert.alert("Alert","FIRST name is emptyyy");
+
    console.log(" no empty")
-   setErrorMessage('all fields must be filled')
+   setErrorMessage('* all fields must be filled')
+
    
 }  //necessary for email  // 
 
 // if(!last_name.trim()) {
 //     return Alert("last name is emptyyy")
 // };
+// else if(email !== password1){
+//     console.log("validation check boo")
+//     setErrorMessage3('* passwords do not match')
+
+// }
+else if(password !== password1){
+    console.log("validation check boo")
+    setErrorMessage3('* passwords do not match')
+
+}
 
 
 else{
@@ -57,12 +73,15 @@ else{
             if(steve.status === 201){
                 return steve.json();
             }else if(steve.status === 400){
+                setErrorMessage1('* invalid email or password')
               throw 'Invalid email or password';
             }else{
+                setErrorMessage1('*Server Error')
                 throw "Something happened";
             }
         }) .then(async(jeff) => {
             let id = jeff.id;
+            setErrorMessage2('All registered, click below to be redirected to the login page')
             
             await AsyncStorage.setItem('@user_id', id);
             console.log(id)
@@ -76,7 +95,7 @@ else{
 
     return (
         <View style={styles.container}>
-            <Text>{errorMessage}</Text>
+           
             <Text style={styles.title}>Register</Text>
             <TextInput style={styles.fname}
                 onChangeText={(first_name) => setFname(first_name)}
@@ -93,6 +112,7 @@ else{
             style={styles.fname}
                 onChangeText={(email) => setEmail(email)}
                 value={email}
+              
                 placeholder="Input email"
             />
             <TextInput
@@ -100,12 +120,25 @@ else{
                 onChangeText={(pass) => setPassword(pass)}
                 value={password}
                 placeholder="Input password"
+                secureTextEntry
             
             />
+
+<TextInput
+            style={styles.fname}
+                onChangeText={(pass1) => setPassword1(pass1)}
+                value={password1}
+                placeholder="Confirm password"
+                secureTextEntry
+            
+            />
+            <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage1}</Text>
+            <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage3}</Text>
+             <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage}</Text>
           
                <TouchableOpacity style={styles.button} title="Login"
                 onPress={() => login()}> <Text> Register</Text></TouchableOpacity>
-               
+               <Text style={{ fontStyle:"italic"}}>{errorMessage2}</Text>
 
             <TouchableOpacity style={styles.button} title="Login"
                 onPress={() => navigation.navigate("homescreen")}> <Text> Login</Text></TouchableOpacity>

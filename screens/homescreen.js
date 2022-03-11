@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, Button,StyleSheet } from 'react-native';
+import { Text,Switch, TextInput, View, Button,StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const Login = ({navigation}) => {
-    const [email, setEmail] = useState("shazhands@gmail.com");
-    const [password, setPassword] = useState("shazhands");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    global.mode=true;
+    const [isEnabled, setIsEnabled] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage1, setErrorMessage1] = useState('');
+
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  global.mode=isEnabled;
+ 
 
     const login = async () => {
         // await AsyncStorage.setItem('@spacebook_token', "kbsdvkjbwvbj");
         // navigation.navigate("Home");
+        if ( email === ""|| password ==="") {
+
+            console.log(" no empty")
+            setErrorMessage('* all fields must be filled')
+         
+            
+         } 
+         else{
         fetch("http://localhost:3333/api/1.0.0/login", {
             method: 'post',
             headers: {
@@ -25,8 +41,9 @@ const Login = ({navigation}) => {
             if(steve.status === 200){
                 return steve.json();
             }else if(steve.status === 400){
+                setErrorMessage1('* invalid email or password')
               throw 'Invalid email or password';
-            }else{
+            }else{  setErrorMessage1('*Server Error')
                 throw "Something happened";
             }
         })
@@ -48,8 +65,50 @@ const Login = ({navigation}) => {
             console.log(err);
         })
     }
+}
+ 
+if(global.mode){
+    return (
+        
+        <View style={styles.container1}>
+             <Text style={styles.title}>Spacebook</Text> 
+            <Text style={styles.title1}>Login</Text>
+
+            <TextInput
+            style={styles.fname}
+                onChangeText={(email) => setEmail(email)}
+                value={email}
+            />
+            <TextInput
+            style={styles.fname}
+                onChangeText={(pass) => setPassword(pass)}
+                value={password}
+                secureTextEntry
+            />
+            <View style={{alignItems:"center"}}>
+                <Text>Dark Mode</Text>
+      <Switch value={isEnabled} onValueChange={toggleSwitch}/> 
+      </View>
+      <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage}</Text>
+            <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage1}</Text>
+            
+            <TouchableOpacity style={styles.button} title="Login"
+                onPress={() => login()}> <Text style={styles.text}>Login</Text></TouchableOpacity>
+               
+           
+            <TouchableOpacity style={styles.button} title="Register"
+                onPress={() => navigation.navigate("register")}> <Text> Make An Account</Text></TouchableOpacity>
+               
+            
+        </View>
+    )
+
+}
+
+else{
 
     return (
+        
         <View style={styles.container}>
              <Text style={styles.title}>Spacebook</Text> 
             <Text style={styles.title1}>Login</Text>
@@ -65,6 +124,13 @@ const Login = ({navigation}) => {
                 value={password}
                 secureTextEntry
             />
+            <View style={{alignItems:"center"}}>
+                <Text>Dark Mode</Text>
+      <Switch value={isEnabled} onValueChange={toggleSwitch}/> 
+      </View>
+      <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage}</Text>
+            <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage1}</Text>
+            
             <TouchableOpacity style={styles.button} title="Login"
                 onPress={() => login()}> <Text style={styles.text}>Login</Text></TouchableOpacity>
                
@@ -76,6 +142,15 @@ const Login = ({navigation}) => {
         </View>
     )
 
+
+
+
+
+
+
+
+
+}
 }
 const styles = StyleSheet.create({
     container: {
@@ -83,6 +158,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#F0FFFF",
         textAlign: "center",
     },
+    container1: {
+        flex: 1,
+       backgroundColor: "#123456"
+     },
     
 text:{
     fontStyle:'italic',

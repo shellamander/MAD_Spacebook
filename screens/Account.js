@@ -4,25 +4,35 @@ import { Text,Switch, TextInput, Button, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-Icons';
-import Userprofile from "./userprofile"
+import ListComponent from "./ListComponent"
+
 import Drafts from './Drafts';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Getfred from './getFriendPost';
+
 
 
 const UserPosts = ({route,navigation}) => {
-  let [data, setData] = useState({});
+  //global.mode=false;
+  //DATA WAS A LET SAHA
+  const [data, setData] = useState([]);
   const [friend, setFriend] = useState([]);
   let [frienddata, setFriendData] = useState({});
   let [isLoading, setIsLoading] = useState(true);
   let [texty1, setText1] = useState([]);
   let [practice, setPractice] = useState([]);
   const [friendpost, setFriendPost] = useState([]);
+
+ 
+  
   
   const [texty, setText] = useState('');
-  const [draft, setDraft] = useState();
-  const [sob, setSobbing] = useState();
-  const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [draft, setDraft] = useState('');
+
+  // const [isEnabled, setIsEnabled] = useState(true);
+
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  // global.mode=isEnabled;
 
 
 ////// {this.state.value == 'news'? <Text>data</Text>: null }
@@ -31,7 +41,7 @@ const UserPosts = ({route,navigation}) => {
 
   
   const test= async () => { 
-   setSobbing();////////// 
+  
 
 
   }
@@ -39,21 +49,25 @@ const UserPosts = ({route,navigation}) => {
 
 
   useEffect(async() => {
-   
+
     await test();
+     Searchy();
+  getFriendPost();
     Searchy();
     getPost();
+ 
     (async () => {
+    
       const draft = await AsyncStorage.getItem("@spacebook_drafts");
-      setDraft(JSON.parse(draft))
      
+    
     })()
 
     getFriendPost(); //you are undefined for some unhappy reason
   }, [])
 
   console.log('draft', draft)
-  console.log("im checking a bunch", isEnabled)
+  //console.log("im checking a bunch", isEnabled)
   // if im enabled is true enter dark mode
 
 
@@ -87,7 +101,9 @@ const UserPosts = ({route,navigation}) => {
         let post_id = post;
         setData(post);
 
+   console.log("boolean test here");
    
+ 
 
 
       })
@@ -253,6 +269,7 @@ const UserPosts = ({route,navigation}) => {
       
           //should do an array list and loop through thelist setting the neame
           console.log(FRIENDLY)
+       
          getFriendPost(FRIENDLY);
          })
         .catch((err) => {
@@ -294,6 +311,7 @@ sotired?.forEach(element => {
         console.log("check",user);
         await setFriendPost(user);
         await setIsLoading(false);
+        console.log("IM PATHETIC ", all)
         //console.log(data)
        
          
@@ -319,18 +337,25 @@ sotired?.forEach(element => {
 //lets loop through async storage
   }
 
-  
+  const move= async(post_id)=>{
+    console.log("I AM IDP", post_id);
+    await AsyncStorage.setItem("@spacebook_postEdit",post_id);
+    navigation.navigate("editPosts")
+  }
    
-  const saveDraft = async (texty) => {
+  const saveDraft = async () => {
     const allDrafts = [...draft, texty] //spread operator 
+    console.log("im very tired", allDrafts);
     setDraft(allDrafts)
     await AsyncStorage.setItem("@spacebook_drafts", JSON.stringify(allDrafts));
+  
   }
+
 
   
 
 
-  if (isEnabled) {
+  if (global.mode) {
     return (
 
 
@@ -340,7 +365,7 @@ sotired?.forEach(element => {
     
 
     
-      <Userprofile/>
+      
   <Text style={styles.title}>My Feed</Text>
   
   <View style={{ flexDirection: 'row', flex: 2,  }}>
@@ -349,46 +374,87 @@ sotired?.forEach(element => {
     <TouchableOpacity  onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
 
   </View>
-  <Switch value={isEnabled} onValueChange={toggleSwitch}/>
+  {/* <Switch value={isEnabled} onValueChange={toggleSwitch}/> */}
 
-
-    <View style={{ flex: 18}} >
-
-     <FlatList
+  <Getfred/> 
+  
+     
+     <View style={{ flex: 3}}>
+  
+<FlatList
       data={data}
       renderItem={({ item }) => (
+        
         <View style={styles.card}>
-          <View style={{ flexDirection: 'column' }}>
-            <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
-          </View>
-        </View>
-      )}
-      keyExtractor={(item) => item.post_id.toString()}
-    /> 
-   
-     </View>  
-     
-<View style={{ flex: 3}}>
-<FlatList
-      data={friendpost}
-      renderItem={({ item }) => (
-        <View style={styles.card}>
+       
           <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => console.log("ARE YOU EVEN SHOWING",item.post_id)}>{item.text}</TouchableOpacity>
             <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => move( item.post_id)}> <Text> Update</Text></TouchableOpacity>
           </View>
         </View>
       )}
       keyExtractor={(item) => item.post_id.toString()}
-    />
+    // removeClippedSubviews={true} // Unmount components when outside of window 
+    // initialNumToRender={2} // Reduce initial render amount
+    // maxToRenderPerBatch={1} // Reduce number in each render batch
+    // updateCellsBatchingPeriod={100} // Increase time between renders
+    // windowSize={7}
+   />
+      
+    
 
 
 </View>
 
 
+{/* 
+<View style={{ flex: 3}}>
+  
+<FlatList
+      data={friendpost}
+      renderItem={({ item }) => (
+        
+        <View style={styles.card}>
+       
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => console.log("ARE YOU EVEN SHOWING",item.post_id)}>{item.text}</TouchableOpacity>
+            </View>
+        </View>
+      )}
+      keyExtractor={(item) => item.post_id.toString()}
+    // removeClippedSubviews={true} // Unmount components when outside of window 
+    // initialNumToRender={2} // Reduce initial render amount
+    // maxToRenderPerBatch={1} // Reduce number in each render batch
+    // updateCellsBatchingPeriod={100} // Increase time between renders
+    // windowSize={7}
+   />
+      
+    
+
+
+</View>
+
+
+     
+<View style={{ flex: 3}} >
+
+<FlatList
+ data={all}
+ renderItem={({ item }) => (
+   <View style={styles.card}>
+     <View style={{ flexDirection: 'column' }}>
+       <TouchableOpacity onPress={() => console.log("ARE YOU ?",item.post_id)}>{item.text}</TouchableOpacity>
+       <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+       <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+     </View>
+   </View>
+ )}
+ keyExtractor={(item) => item.post_id.toString()}
+/> 
+
+</View>   */}
 
 
 </View>
@@ -414,8 +480,6 @@ sotired?.forEach(element => {
         <View style={styles.container}>
     
 
-      
-        <Userprofile/>
     <Text style={styles.title}>My Feed</Text>
     
     <View style={{ flexDirection: 'row', flex: 2,  }}>
@@ -424,17 +488,17 @@ sotired?.forEach(element => {
       <TouchableOpacity  onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
 
     </View>
-    <Switch value={isEnabled} onValueChange={toggleSwitch}/>
+   
 
 
-      <View style={{ flex: 18}} >
+      <View style={{ flex: 8}} >
 
        <FlatList
         data={data}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={{ flexDirection: 'column' }}>
-              <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity>
+              <TouchableOpacity onPress={() => console.log("im very sad",item.post_id)}>{item.text}</TouchableOpacity>
               <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
               <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
             </View>
@@ -483,7 +547,7 @@ sotired?.forEach(element => {
 
 
 
-//   {/* {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) }  */}
+//  {data.map(post => (<TouchableOpacity onPress={() => console.log(post.post_id)}>{post.text}</TouchableOpacity> )) }  
 
 //     )
 //   }
@@ -493,11 +557,13 @@ sotired?.forEach(element => {
 const styles = StyleSheet.create({
   container: {
     // flexGrow: 1,
+    flex: 1,
     backgroundColor: "#F0FFFF"
   },
   container1: {
     // flexGrow: 1,
-    backgroundColor: "#000"
+    flex: 1,
+    backgroundColor: "#123456",
   },
   text: {
     fontFamily: "GillSans-SemiBold",

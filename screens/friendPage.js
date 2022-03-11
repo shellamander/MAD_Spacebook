@@ -14,6 +14,7 @@ const UserProfile = ({route,navigation}) => {
     let [isLoading, setIsLoading] = useState(true);
     let [data1, setData1] = useState([]);
     const {friend_id } = route.params;
+    const [errorMessage, setErrorMessage] = useState('');
     
     const [texty, setText] = useState('');
   
@@ -159,6 +160,7 @@ const UserProfile = ({route,navigation}) => {
           } else if (response.status === 401) {
               throw 'Unauthorised';
           }else if (response.status === 403) {
+            setErrorMessage("Already Liked");
             throw 'you liked this already';
         } else {
               throw "Something happened";
@@ -187,13 +189,42 @@ const UserProfile = ({route,navigation}) => {
                 throw 'Unauthorised';
             }else if (response.status === 403) {
               throw 'you havent even liked it';
-          } else {
+          } else if (response.status === 500) {
+            throw 'server error';
+        }else {
                 throw "Something happened";
             }
         })
         .catch((err) => {
             console.log(err);
         })
+      }
+
+      const deletePost = async (id, post) => {
+        let token = await AsyncStorage.getItem("@spacebook_token");
+    
+        fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post, {
+          method: 'delete',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Authorization': token
+          }
+        })
+    
+          .then((response) => {
+            if (response.status === 200) {
+              console.log("ive deleted this post  ");
+            } else if (response.status === 401) {
+              throw 'Unauthorised';
+            } else if (response.status === 403) {
+              throw 'you havent even liked it';
+            } else {
+              throw "Something happened";
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
       }
         
    
@@ -206,8 +237,8 @@ const UserProfile = ({route,navigation}) => {
         return (
             <View style={styles.container}>
                 <View style={{flex: 1}}> 
-                    <Text>{data.first_name} {data.last_name}</Text>
-                    <Text>You have {data.friend_count} friends</Text>
+                    <Text style={styles.title}> {data.first_name}'s Feed </Text>
+                  
                 </View>
 
                 <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -223,9 +254,9 @@ const UserProfile = ({route,navigation}) => {
                             <View style={styles.card}>
                                 <View style={{flexDirection:'row'}}> 
                                     <TouchableOpacity onPress={() => console.log(item.post_id)}>{item.text}</TouchableOpacity> 
-                                  {item.author.user_id== friend_id?<><TouchableOpacity style={{ marginLeft: 15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20} /></TouchableOpacity><TouchableOpacity style={{ height: 20, width: 60, marginLeft: 15, }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20} /></TouchableOpacity></>
-                                    :<>  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-                                    <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+                                  {item.author.user_id== friend_id?<><TouchableOpacity style={{ marginLeft: 15 }} onPress={() => likePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-up" color="green" size={20} /></TouchableOpacity><TouchableOpacity style={{ height: 20, width: 60, marginLeft: 15, }} onPress={() => dislikePost(item.author.user_id, item.post_id)}> <FontAwesome name="thumbs-down" color="red" size={20} /></TouchableOpacity>  {errorMessage}</>
+                                   :<>  <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+                                    <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity> {errorMessage}
                                   </>
                                      }
                                     <Text style={{ marginLeft:15 }} > {item.author.first_name}</Text>
@@ -237,7 +268,7 @@ const UserProfile = ({route,navigation}) => {
                         keyExtractor={(item) => item.post_id.toString()}
                     />
              
-
+                   
                 </View>
                 
                 <TouchableOpacity style={styles.button} title="Login"
@@ -260,6 +291,14 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: "#F0FFFF",
     textAlign: "center",
+},
+title: { 
+  marginTop: 100,
+  color: "#61dafb",
+  textAlign: "center",
+  fontSize: 50,
+  fontStyle:'italic',
+  fontWeight: 'bold'
 },
      fname1: {
 

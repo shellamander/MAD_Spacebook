@@ -131,21 +131,23 @@ const UserProfile = ({navigation}) => {
         
     }else{
         return (
-            <View style={{alignItems:'center'}}> 
+           
 
 
-{/* <Text>{pfp}</Text>  <Image source={require()} // lets stosre image in async storage to get it  */}
 
                  
-     
+<View style={styles.container}> 
        
         <Image style={styles.profileImage} source={{uri:data1}} />
                 <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.first_name}</Text>
                 <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity  style={styles.button} onPress={() => navigation.navigate("edit")}> <Text> Edit Details</Text></TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => logout()}> <Text> Logout</Text></TouchableOpacity>
+               
                 </View>
+            
             </View>
+           
             
         )
         
@@ -157,7 +159,8 @@ const UserProfile = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F0FFFF"
+        backgroundColor: "#F0FFFF",
+        alignItems:"center"
     },
     text: {
         fontFamily: "GillSans-SemiBold",

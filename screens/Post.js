@@ -5,7 +5,7 @@ import * as React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import PublishedScreen from './Published';
 import Drafts from './Drafts';
-import ScheduledScreen from './Scheduled'
+
 
 
 
@@ -37,8 +37,7 @@ function PostScreen({navigation}) {
     <Tab.Navigator>
         
     <Tab.Screen name="Drafts" component={Drafts} />
-    <Tab.Screen name="Published" component={PublishedScreen} />
-    <Tab.Screen name="Scheduled" component={ScheduledScreen} />
+   
      
   </Tab.Navigator>
 

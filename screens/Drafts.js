@@ -11,14 +11,19 @@ function IDK({navigation}) {
   const [token1, setToken] = useState('');
   const [draft1, setDraft] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [idPost, setID] = useState('');
 
 
   const test= async () => { 
     console.log("GOT TO HERE NOW")
     const store =  await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
     const draft =  await AsyncStorage.getItem("@spacebook_drafts");
+     await AsyncStorage.setItem("@spacebook_postEdit",idPost);
     const draft_list = JSON.parse(draft);
     console.log("WHERE MY DRAFTS AT:", draft_list)
+
+    //
     setToken(store);
     setDraft(draft_list);
     setIsLoading(false);
@@ -43,9 +48,81 @@ function IDK({navigation}) {
 //CHECK IF USER LOGGED IN AND RENDER ANOTHER SCREEN INSTEAD FOR STYLE SHEET OR MAYBE
 //SHOW THE SAME POST BUT DIFFERENT STYLE 
 // FLAT LIST CHECK ID IF ID == USER == USER_LOGGED IN THEN POST.STYLES.LOGGEDIN ELSE STYLES==USER.OLOGGED OUT
-  const postbaby = () => {
+
+const updatePost = (author, post_id) => {
+    
+      console.log("ASh", token1);
+      fetch("http://localhost:3333/api/1.0.0/user/"+author+"/post"+post_id, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': token1,
+      },
+      body: JSON.stringify({
+          "text":text,
+          // "last_name": last_name,
+          // "email": email,
+          // "password": password
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("ive updated  ");
+        } else if (response.status === 401) {
+          throw 'Unauthorised';
+        } else if (response.status === 403) {
+          throw 'only update your own posts';
+        } else {
+          throw "Something happened";
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  })
+}
+ 
+const deletePost = async (id, post) => {
+  let token = await AsyncStorage.getItem("@spacebook_token");
+
+  fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post, {
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Authorization': token
+    }
+  })
+
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("ive deleted this post  ");
+      } else if (response.status === 401) {
+        throw 'Unauthorised';
+      } else if (response.status === 403) {
+        throw 'you havent even liked it';
+      } else {
+        throw "Something happened";
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}
+const move= async()=>{
+  console.log("I AM IDP", idPost);
+  await AsyncStorage.setItem("@spacebook_postEdit",idPost);
+  navigation.navigate("editPosts")
+}
+const postbaby = async() => {
     console.log("ASh", token1);
-    fetch("http://localhost:3333/api/1.0.0/user/18/post", { // change id 
+    let id = await AsyncStorage.getItem("@spacebook_id");
+    if (texty === "" ) {
+
+      console.log(" no empty")
+      setErrorMessage('* this post is empty')
+   
+      
+   } else{
+    fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post", { // change id 
       method: 'post',
       headers: {
           'Content-Type': 'application/json',
@@ -83,28 +160,60 @@ function IDK({navigation}) {
       console.log(err);
   })
 }
+  }
 
-if(isLoading){
+if(global.mode){
   return(
-    <Text>Loading...</Text>
+    <View style={styles.container1}>
+    <Text style={styles.title}>Drafts</Text>
+    <Text>{global.mode}</Text>
+    <TextInput
+    style={styles.card}
+    placeholder="write here :)"
+        onChangeText={(texty) => setText(texty)}
+        value={texty}
+    />
+     <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage}</Text>
+  
+     <TouchableOpacity style={styles.button} onPress={() => postbaby()}> <Text> Post</Text></TouchableOpacity>
+          
+     <View style={{flex:1}}>
+    <FlatList
+      data={draft1}
+      renderItem={({item}) => (
+        <View style={styles.card}>
+          <View style={{ flexDirection: 'row' }}>
+
+            <TouchableOpacity onPress={() => console.log("SO SCARED",JSON.stringify(item.post_id)) }>{JSON.stringify(item)}</TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(JSON.stringify(item.author.user_id, item.post_id))}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
+            {/* <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity> */}
+            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => move()}> <Text> Update</Text></TouchableOpacity>
+
+
+            
+          </View>
+        </View>
+      
+      )}
+    />
+    </View>
+</View>
   )
 }else{
   return (
     <View style={styles.container}>
           <Text style={styles.title}>Drafts</Text>
+          <Text>{global.mode}</Text>
           <TextInput
-          style={styles.fname}
+          style={styles.card}
           placeholder="write here :)"
               onChangeText={(texty) => setText(texty)}
               value={texty}
           />
-         
-          <Button 
-              title="POST"
-              onPress={() => postbaby()}
-              
-          />
-  
+              <Text style={{color:"red", fontStyle:"italic"}}>{errorMessage}</Text>
+         <TouchableOpacity style={styles.button} onPress={() => postbaby()}> <Text> Post</Text></TouchableOpacity>
+          
+   <View style={{flex:1}}>
           <FlatList
             data={draft1}
             renderItem={({item}) => (
@@ -112,12 +221,14 @@ if(isLoading){
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={() => console.log(item.post_id)}>{JSON.stringify(item)}</TouchableOpacity>
                   <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
+                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => move()}> <Text> Update</Text></TouchableOpacity>
                 </View>
               </View>
+              
             
             )}
           />
+          </View>
       </View>
   
   )
@@ -134,6 +245,10 @@ const styles = StyleSheet.create({
   container: {
       flex: 1,
       backgroundColor: "#F0FFFF"
+  },
+  container1: {
+     flex: 1,
+    backgroundColor: "#123456"
   },
   text: {
       fontFamily: "GillSans-SemiBold",
@@ -154,11 +269,21 @@ const styles = StyleSheet.create({
       overflow: "hidden"
   },
   button: {
-      alignItems: 'center',
-      backgroundColor: '#F0FFFF',
-      padding: 10,
-      width:100,
-    },
+    fontStyle:'italic',
+    fontWeight: 'bold',
+    alignItems: 'center',
+    backgroundColor: "#61dafb",
+    padding: 10,
+    width:150,
+    flexDirection: 'row',
+    marginLeft:120,
+    margin:30,
+    marginBottom: 10,
+    textAlign: "center",
+    
+alignItems: "center",
+    
+  },
     button1: {
       alignItems: 'center',
       backgroundColor: '#FFF0F5',
@@ -211,5 +336,6 @@ const styles = StyleSheet.create({
     },
 }
 )
+
 
   export default IDK;

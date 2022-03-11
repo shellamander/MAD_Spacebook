@@ -16,12 +16,12 @@ function IDK({navigation}) {
 
 
   const test= async () => { 
-    console.log("GOT TO HERE NOW")
+
     const store =  await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
     const draft =  await AsyncStorage.getItem("@spacebook_drafts");
      await AsyncStorage.setItem("@spacebook_postEdit",idPost);
     const draft_list = JSON.parse(draft);
-    console.log("WHERE MY DRAFTS AT:", draft_list)
+
 
     //
     setToken(store);
@@ -36,18 +36,11 @@ function IDK({navigation}) {
     })
     await test();
     
-    console.log("Should be set", token1);
-    console.log("All my mad uncles", draft1)
+   
     //here
   },[] );  // testing
 
-//reference later for r 
-  //"user_id": AsyncStorage.getItem(18);
-//var r = 18;
-// LOOP THROUGH FRIENDS AND SHOW USERS POSTS 
-//CHECK IF USER LOGGED IN AND RENDER ANOTHER SCREEN INSTEAD FOR STYLE SHEET OR MAYBE
-//SHOW THE SAME POST BUT DIFFERENT STYLE 
-// FLAT LIST CHECK ID IF ID == USER == USER_LOGGED IN THEN POST.STYLES.LOGGEDIN ELSE STYLES==USER.OLOGGED OUT
+
 
 const updatePost = (author, post_id) => {
     
@@ -60,9 +53,7 @@ const updatePost = (author, post_id) => {
       },
       body: JSON.stringify({
           "text":text,
-          // "last_name": last_name,
-          // "email": email,
-          // "password": password
+       
       })
       .then((response) => {
         if (response.status === 200) {
@@ -108,16 +99,16 @@ const deletePost = async (id, post) => {
     })
 }
 const move= async()=>{
-  console.log("I AM IDP", idPost);
+
   await AsyncStorage.setItem("@spacebook_postEdit",idPost);
   navigation.navigate("editPosts")
 }
 const postbaby = async() => {
-    console.log("ASh", token1);
+
     let id = await AsyncStorage.getItem("@spacebook_id");
     if (texty === "" ) {
 
-      console.log(" no empty")
+    
       setErrorMessage('* this post is empty')
    
       
@@ -133,29 +124,19 @@ const postbaby = async() => {
         
         
         "text": texty,
-        
-        
-        //hardcoded this for now //id 
+      
       })
   })
-  .then((steve) => {
-      if(steve.status === 201){
-        console.log("IM HOME HONEY")
+  .then((response) => {
+      if(response.status === 201){
+       
           return steve.json();
-      }else if(steve.status === 400){
+      }else if(response.status === 400){
         throw 'Invalid email or password';
       }else{
           throw "Something happened";
       }
-  }) .then(async(jeff) => {
-    //console.log("IM WORKINGGG")
-      let post_id = jeff.id;
-      
-      
-      await AsyncStorage.setItem('@post_id', post_id);
-      console.log(post_id)
-      
-  })
+  }) 
   .catch((err) => {
       console.log(err);
   })
@@ -184,10 +165,9 @@ if(global.mode){
         <View style={styles.card}>
           <View style={{ flexDirection: 'row' }}>
 
-            <TouchableOpacity onPress={() => console.log("SO SCARED",JSON.stringify(item.post_id)) }>{JSON.stringify(item)}</TouchableOpacity>
+            <TouchableOpacity >{JSON.stringify(item)}</TouchableOpacity>
             <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(JSON.stringify(item.author.user_id, item.post_id))}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-            {/* <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity> */}
-            <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => move()}> <Text> Update</Text></TouchableOpacity>
+            
 
 
             
@@ -221,7 +201,7 @@ if(global.mode){
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={() => console.log(item.post_id)}>{JSON.stringify(item)}</TouchableOpacity>
                   <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
-                  <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => move()}> <Text> Update</Text></TouchableOpacity>
+       
                 </View>
               </View>
               

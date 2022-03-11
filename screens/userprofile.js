@@ -30,9 +30,7 @@ const UserProfile = ({navigation}) => {
         let id = await AsyncStorage.getItem("@spacebook_id");
         let token = await AsyncStorage.getItem("@spacebook_token");
         let pfp= await AsyncStorage.getItem("@spacebook_pfp")
-        console.log(pfp);
-        console.log(id);
-
+       
       
         fetch("http://localhost:3333/api/1.0.0/user/" + id, {
         method: 'get',
@@ -50,15 +48,11 @@ const UserProfile = ({navigation}) => {
                 throw "Something happened";
             }
         }).then(async (user) => {
-            console.log(user);
+           
             await setData(user);
-            console.log(data)
-            console.log(data.email)
-            console.log(data.first_name)
             await setPhoto(pfp);
             await setIsLoading(false);
-            console.log("hey shawty" , data.first_name);
-            console.log(isLoading, data)
+           
            })
         .catch((err) => {
             console.log(err);
@@ -88,7 +82,7 @@ const UserProfile = ({navigation}) => {
               let data11 = URL.createObjectURL(image);
               setData1(data11);
               setIsLoading(false);
-              console.log("ROARRRRRRRRRRRRRRRRRRRRRRR")
+         
             })
             .catch((err) => {
               console.log(err);
@@ -99,7 +93,7 @@ const UserProfile = ({navigation}) => {
    
         let token = await AsyncStorage.getItem("@spacebook_token");
       
-        console.log("do i even reach here");
+
 
       
         fetch("http://localhost:3333/api/1.0.0/logout/" , {
@@ -130,13 +124,14 @@ const UserProfile = ({navigation}) => {
         return (<View><Text>Loading</Text></View>)
         
     }else{
+        if (global.mode) {
         return (
            
 
 
 
                  
-<View style={styles.container}> 
+<View style={styles.container1}> 
        
         <Image style={styles.profileImage} source={{uri:data1}} />
                 <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.first_name}</Text>
@@ -152,8 +147,31 @@ const UserProfile = ({navigation}) => {
         )
         
     }
+    else{
+        return (
+           
+
+
+
+                 
+            <View style={styles.container}> 
+                   
+                    <Image style={styles.profileImage} source={{uri:data1}} />
+                            <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.first_name}</Text>
+                            <View style={{ flexDirection: 'row', flex: 1 }}>
+                            <TouchableOpacity  style={styles.button} onPress={() => navigation.navigate("edit")}> <Text> Edit Details</Text></TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={() => logout()}> <Text> Logout</Text></TouchableOpacity>
+                           
+                            </View>
+                        
+                        </View>
+                       
+                        
+                    )
+
+    }
     
-    
+} 
     
 }
 const styles = StyleSheet.create({
@@ -162,6 +180,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#F0FFFF",
         alignItems:"center"
     },
+    container1: {
+        // flexGrow: 1,
+        flex: 1,
+        backgroundColor: "#123456",
+      },
     text: {
         fontFamily: "GillSans-SemiBold",
         color: "#000"

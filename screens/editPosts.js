@@ -3,8 +3,7 @@ import { Text, View,StyleSheet, Image,TextInput,Button,FlatList} from 'react-nat
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChangeImage from './Published';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
+
 
 
 // GET END POINT PICTURES FUUUUUUU
@@ -13,10 +12,7 @@ const UserProfile = ({route,navigation}) => {
     let [data, setData] = useState({});
     let [photo, setPhoto] = useState({});
     const [text, setText] = useState("");
-    const [last_name, setSname] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    let [isLoading, setIsLoading] = useState(true);
+   
     let [data1, setData1] = useState({});
     
     
@@ -44,20 +40,18 @@ const UserProfile = ({route,navigation}) => {
           },
           
         })
-          .then((steve) => {
-            if (steve.status === 200) {
+          .then((response) => {
+            if (response.status === 200) {
               console.log("IM HOME HONEY")
-              return steve.json();
-            } else if (steve.status === 400) {
+              return response.json();
+            } else if (response.status === 400) {
               throw 'Invalid email or password';
             } else {
               throw "Something happened";
             }
-          }).then(async (jeff) => {
-            //console.log("IM WORKINGGG")
-            let post_id = jeff.id;
-    setData1(jeff);
-    console.log("IM DONE W U", data1.text)
+          }).then(async (res) => {
+           
+    setData1(res);
     
           })
           .catch((err) => {
@@ -90,7 +84,7 @@ const UserProfile = ({route,navigation}) => {
             console.log("ive 401  ");
             throw 'Unauthorised';
           } else if (response.status === 403) {
-            console.log("iv403 ");
+          
             throw 'only update your own posts';
           } else {
             throw "Something happened";
@@ -101,30 +95,14 @@ const UserProfile = ({route,navigation}) => {
         })
     
   }
-// move the throw error to be viible 
-//check for a;ll the error codes
-//{changeImage()}
+
   
         return (
             <View style={styles.container}> 
 
 <View style={{ flex: 3}}>
   <Text style={styles.fname}>{data1.text}</Text>
-{/* <FlatList
-      data={data1}
-      renderItem={({ item }) => (
-        
-        <View style={styles.fname}>
-       
-          <View style={{ flexDirection: 'row' }}>
-            
-            <TouchableOpacity onPress={() => console.log("ARE YOU EVEN SHOWING",item.post_id)}>{item.text}</TouchableOpacity>
-            </View>
-        </View>
-      )}
-      keyExtractor={(item) => item.post_id.toString()}
-    
-   /> */}
+
     </View >
       <View style={{ flex: 3}}>
         <TextInput  style={styles.fname} onChangeText={(text) => setText(text)}

@@ -55,15 +55,12 @@ const Friends = ({navigation}) => {
               throw "Something happened";
           }
       })
-      .then(async (FRIENDLY) => {
-        setFriend(FRIENDLY)
-        await AsyncStorage.setItem('@spacebook_friends', FRIENDLY);
-        console.log("I AM FRIEDNLSY" + FRIENDLY.id);
-        setFriendID(FRIENDLY)
-        //should do an array list and loop through thelist setting the neame
-        console.log(FRIENDLY)
-        console.log("im tryna be friend w you " ,friendID)
-        upset();
+      .then(async (Friend) => {
+        setFriend(Friend)
+        await AsyncStorage.setItem('@spacebook_friends', Friend);
+    
+        setFriendID(Friend)
+        Flist();
        })
       .catch((err) => {
           console.log(err);
@@ -71,18 +68,13 @@ const Friends = ({navigation}) => {
     }
  
     const goToFriend= async(id)=>{
-      let friendPage = id;
-      console.log(friendPage);
-     // await AsyncStorage.setItem('@spacebook_friend', friendPage);
+ 
+   
       navigation.navigate('friendAccount', {"friend_id": id});
-    
-      // navigation.navigate('main', {
-      //   screen: 'Account',
-      //   params: { 'friend_id': id }
-      // })
+ 
         }
 
-        const upset= async()=>{
+        const Flist= async()=>{
 
           {friend.map(async friend1 => (
   
@@ -96,11 +88,7 @@ const Friends = ({navigation}) => {
             console.log("I HOPE IM SUCCESSFULLY SETTING THIS "+ AsyncStorage.getItem('@spacebook_friends'));
             }
     
-
-
-
-//PLEASE CONDITIONALLY RENDER SO AFTER YOU ACCEPTED THE FRIEDN REQUEST IT DISAPPEARS SHAZA
-  const getItem = () => {
+ const getItem = () => {
     {friendID.map(friend2 => (
   
       <View>
@@ -111,10 +99,11 @@ const Friends = ({navigation}) => {
       ) ) }
   };
 
+  if (global.mode) {
   return (
   
     <SafeAreaView style={{flex: 1}}>
-      <View style={styles.container}>
+      <View style={styles.container1}>
       <Text style={styles.title1}>My Friends</Text>
      
         {friend.map(friend1 => (
@@ -133,15 +122,51 @@ const Friends = ({navigation}) => {
     </SafeAreaView>
     
   );
+
+        }
+
+        else{
+
+          return (
+  
+            <SafeAreaView style={{flex: 1}}>
+              <View style={styles.container}>
+              <Text style={styles.title1}>My Friends</Text>
+             
+                {friend.map(friend1 => (
+                     
+                  <View>
+                  
+                    <TouchableOpacity  onPress={() => goToFriend(friend1.user_id)} style={styles.fname}  ><Text style={{textAlign:"center"}}> {friend1.user_givenname}</Text> </TouchableOpacity> 
+                     
+                     </View>
+                  ) ) }
+        
+                  
+        
+               
+              </View>
+            </SafeAreaView>
+            
+          );
+        }
+
+
+
 };
-// THE RETURN STATEMENT FLATLIST DOESNT DO ANYTHING OTHER THAN REDNER ITEM VIEW 
-//MAKE SURE TO JUST ADD A STYLE CONTAINER
+
 
 const styles = StyleSheet.create({
   container: {
       flex: 4,
       backgroundColor: "#F0FFFF",
       textAlign: "center",
+  },
+
+  container1: {
+    // flexGrow: 1,
+    flex: 1,
+    backgroundColor: "#123456",
   },
   
 text:{

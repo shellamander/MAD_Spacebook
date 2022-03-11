@@ -5,29 +5,16 @@ import { Text,Switch, TextInput, Button, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-Icons';
-import ListComponent from "./ListComponent"
-
-import Drafts from './Drafts';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
 const UserPosts = ({route,navigation}) => {
-  //global.mode=false;
-  //DATA WAS A LET SAHA
+
   const [data, setData] = useState([]);
-  const [friend, setFriend] = useState([]);
-  let [frienddata, setFriendData] = useState({});
-  let [isLoading, setIsLoading] = useState(true);
-  let [texty1, setText1] = useState([]);
-  let [practice, setPractice] = useState([]);
   const [friendpost, setFriendPost] = useState([]);
-  const all = friendpost.concat(data);
+
  
-  
-  
-  const [texty, setText] = useState('');
-  const [draft, setDraft] = useState();
+
   useEffect(async() => {
 
   
@@ -72,15 +59,12 @@ const Searchy= async()=>{
                 throw "Something happened";
             }
         })
-        .then(async (FRIENDLY) => {
-          setFriend(FRIENDLY)
-          await AsyncStorage.setItem('@spacebook_friends', FRIENDLY);
-          console.log("I AM FRIEDNLSY" , FRIENDLY);
+        .then(async (res) => {
+          setFriend(res)
+          await AsyncStorage.setItem('@spacebook_friends', res);
+     
       
-          //should do an array list and loop through thelist setting the neame
-          console.log(FRIENDLY)
-       
-         getFriendPost(FRIENDLY);
+         getFriendPost(res);
          })
         .catch((err) => {
             console.log(err);
@@ -88,17 +72,12 @@ const Searchy= async()=>{
       }
 
 
-      const  getFriendPost = async (sotired) => {
-        console.log("LOOK HERE",sotired);
-      //     //<FlatList
-      // data={sotired}
-      // renderItem={({item}) => (
-      //   setPractice(JSON.stringify(item.user_id))
+      const  getFriendPost = async (friends1) => {
+     
         
       let token = await AsyncStorage.getItem("@spacebook_token");
-      // )}
-      // ///>
-      sotired?.forEach(element => {
+    
+      friends1?.forEach(element => {
       
       
         fetch("http://localhost:3333/api/1.0.0/user/" + element.user_id + "/post", {
@@ -117,11 +96,10 @@ const Searchy= async()=>{
                   throw "Something happened";
               }
           }).then(async (user) => {
-              console.log("check",user);
+          
               await setFriendPost(user);
               await setIsLoading(false);
-              console.log("IM PATHETIC ", all)
-              //console.log(data)
+            
              
                
             
@@ -135,15 +113,6 @@ const Searchy= async()=>{
         
       );
       
-      
-      //  console.log("IM A PRACTICE GIRL",practice.user_id);
-      //     console.log("who ami i ",friend_id);
-      //     console.log("who ami i ",friend_id);
-      //     let token = await AsyncStorage.getItem("@spacebook_token");
-          
-      //     const {friend_id } = route.params;
-      //     console.log("who ami i ",friend_id);
-      //lets loop through async storage
         }
         if(global.mode){
   return(
@@ -158,18 +127,14 @@ const Searchy= async()=>{
            
               <View style={{ flexDirection: 'row' }}>
                 
-                <TouchableOpacity onPress={() => console.log("ARE YOU EVEN SHOWING",item.post_id)}>{item.text}</TouchableOpacity>
+                <TouchableOpacity>{item.text}</TouchableOpacity>
                 <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
                 <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
               </View>
             </View>
           )}
           keyExtractor={(item) => item.post_id.toString()}
-        // removeClippedSubviews={true} // Unmount components when outside of window 
-        // initialNumToRender={2} // Reduce initial render amount
-        // maxToRenderPerBatch={1} // Reduce number in each render batch
-        // updateCellsBatchingPeriod={100} // Increase time between renders
-        // windowSize={7}
+       
        />
           
         
@@ -192,18 +157,14 @@ const Searchy= async()=>{
                      
                         <View style={{ flexDirection: 'row' }}>
                           
-                          <TouchableOpacity onPress={() => console.log("ARE YOU EVEN SHOWING",item.post_id)}>{item.text}</TouchableOpacity>
+                          <TouchableOpacity  >{item.text}</TouchableOpacity>
                           <TouchableOpacity style={{ marginLeft: 5, }} onPress={() => deletePost(item.author.user_id, item.post_id)}> <FontAwesome name="trash-o" color="black" size={20} /></TouchableOpacity>
                           <TouchableOpacity style={{ backgroundColor: "FFF" }} onPress={() => updatePost(item.author.user_id, item.post_id)}> <Text> Update</Text></TouchableOpacity>
                         </View>
                       </View>
                     )}
                     keyExtractor={(item) => item.post_id.toString()}
-                  // removeClippedSubviews={true} // Unmount components when outside of window 
-                  // initialNumToRender={2} // Reduce initial render amount
-                  // maxToRenderPerBatch={1} // Reduce number in each render batch
-                  // updateCellsBatchingPeriod={100} // Increase time between renders
-                  // windowSize={7}
+                  
                  />
                     
                   

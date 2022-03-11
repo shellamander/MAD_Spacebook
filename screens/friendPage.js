@@ -52,8 +52,7 @@ const UserProfile = ({route,navigation}) => {
         }).then(async (user) => {
             console.log(user);
             await setData(user);
-            //await setIsLoading(false);
-            //console.log(data)
+         
             
              await getPost();
           
@@ -68,7 +67,7 @@ const UserProfile = ({route,navigation}) => {
 
     let token = await AsyncStorage.getItem("@spacebook_token"); //call before i need it otherwise its undefined 
     const {friend_id } = route.params;
-    console.log("why do i work here but not over there"+friend_id );
+
 
     console.log("ASh", token);
     fetch("http://localhost:3333/api/1.0.0/user/"+friend_id+"/post", {
@@ -90,15 +89,14 @@ const UserProfile = ({route,navigation}) => {
           throw "Something happened";
         }
       }).then(async (post) => {
-        console.log("IM WORKINGGG")
-        
-        //let post_id = post;
+   
+  
         await setData1(post);
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        //post this as a string rather than throwing it 
+     
       })
   }
   const postbaby = async () => {
@@ -119,22 +117,16 @@ const UserProfile = ({route,navigation}) => {
 
       })
     })
-      .then((steve) => {
-        if (steve.status === 201) {
-          console.log("IM HOME HONEY")
-          return steve.json();
-        } else if (steve.status === 400) {
+      .then((response) => {
+        if (response.status === 201) {
+      
+          return response.json();
+        } else if (response.status === 400) {
           throw 'Invalid email or password';
         } else {
           throw "Something happened";
         }
-      }).then(async (jeff) => {
-        //console.log("IM WORKINGGG")
-        let post_id = jeff.id;
-
-
-        await AsyncStorage.setItem('@post_id', post_id);
-        console.log(post_id)
+      }).then(async (res) => {
         getPost();
 
       })
@@ -228,8 +220,7 @@ const UserProfile = ({route,navigation}) => {
       }
         
    
-// move the throw error to be viible 
-//check for a;ll the error codes
+
     if(isLoading){
         return (<View><Text>Loading</Text></View>)
         
@@ -241,10 +232,12 @@ const UserProfile = ({route,navigation}) => {
                   
                 </View>
 
-                <View style={{ flexDirection: 'row', flex: 1 }}>
-          <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
-          <TouchableOpacity style={{ marginTop: 48 }} onPress={() => postbaby()}> <FontAwesome name="plus" color="green" size={20} /></TouchableOpacity>
-        </View>
+                <View >
+    <TextInput style={styles.fname1} onChangeText={(texty) => setText(texty)} value={texty} />
+    <View style={{ flexDirection: 'row' }}>
+  <TouchableOpacity  onPress={() => postbaby()}> <Text style={styles.button}>Post</Text></TouchableOpacity>
+    </View>
+  </View>
                 
                 
                 <View style={{flex: 2}}>
